@@ -48,9 +48,9 @@ class Adventure:
 
     def start_game_loop(self):
         cls()
-        self.output.print(f'ZORK Demo')
-        self.output.print('Written by Brandon Corfman')
+        self.output.print('\033[4mZORK Demo\033[0m')
         self.output.print('')
+        print(self.current_room.title)
         print(self.current_room.description)
         print(self.current_room.list_items())
         input_text = ''

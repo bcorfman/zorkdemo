@@ -101,7 +101,7 @@ class WestOfHouse(Location):
         for line in ConsoleOutput().wrap_lines(paragraphs):
             txt += line + '\n'
         items = [Mailbox(), BoardedDoor(), WelcomeMat()]
-        super().__init__('West of House', txt.rstrip(), items)
+        super().__init__('\033[33mWest of House\033[0m', txt.rstrip(), items)
 
     def remove_item(self, item):
         pass
