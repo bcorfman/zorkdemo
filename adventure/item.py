@@ -1,6 +1,3 @@
-from .state import StateMachine
-
-
 class Item:
     def __init__(self, name, **kwargs):
         self.name = name

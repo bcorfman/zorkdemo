@@ -18,4 +18,3 @@ class ConsoleOutput:
             else:
                 output.append(self.wrapper.fill(line))
         return output
-
