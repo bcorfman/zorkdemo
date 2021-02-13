@@ -97,23 +97,8 @@ class WelcomeMat(Item):
 
 class WestOfHouse(Location):
     def __init__(self):
-        with open(os.path.join('data', 'WestOfHouse.txt')) as f:
-            text = ''
-            title = f.readline().strip()
-            paragraphs = [title]
-            for line in f.readlines():
-                if line.strip() == '':
-                    paragraphs.append(text)
-                    text = ''
-                else:
-                    text += line
-            if text.strip():  # add whatever text is at the end.
-                paragraphs.append(text)
-        txt = ''
-        for line in ConsoleOutput().wrap_lines(paragraphs):
-            txt += line + '\n'
         items = [Mailbox(), BoardedDoor(), WelcomeMat()]
-        super().__init__(title='West of House', text=txt.rstrip(), contains=items)
+        super().__init__(title='West of House', contains=items)
 
     def remove_item(self, item):
         pass

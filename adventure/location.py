@@ -1,3 +1,5 @@
+import os
+from .output import ConsoleOutput
 from .format import yellow
 
 
@@ -16,7 +18,23 @@ def partition(seq, fn):
 class Location:
     def __init__(self, **kwargs):
         self.title = kwargs['title']
-        self._text = kwargs['text']
+        location_file = self.__class__.__name__ + '.txt'
+        with open(os.path.join('data', location_file)) as f:
+            text = ''
+            title = f.readline().strip()
+            paragraphs = [title]
+            for line in f.readlines():
+                if line.strip() == '':
+                    paragraphs.append(text)
+                    text = ''
+                else:
+                    text += line
+            if text.strip():  # add whatever text is at the end.
+                paragraphs.append(text)
+        txt = ''
+        for line in ConsoleOutput().wrap_lines(paragraphs):
+            txt += line + '\n'
+        self._text = txt.rstrip()
         self.items = kwargs['contains']
 
     @property
