@@ -1,4 +1,4 @@
-from adventure.house import Leaflet, Mailbox, WelcomeMat, WestOfHouse, BoardedDoor
+from adventure.westofhouse import Leaflet, Mailbox, WelcomeMat, WestOfHouse, BoardedDoor
 
 
 def test_leaflet():

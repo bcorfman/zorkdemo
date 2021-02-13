@@ -1,7 +1,7 @@
 import os
 import sys
 from .output import ConsoleOutput
-from .house import WestOfHouse
+from .westofhouse import WestOfHouse
 from .format import underline
 
 
