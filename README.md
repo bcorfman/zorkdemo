@@ -1,5 +1,4 @@
 # zorkdemo
-Zork Demo in Python. 
 Runs on Linux, Windows or Mac.
 
 A (much simplified) port of a famous adventure game to help teach my daughter how to program in Python.
