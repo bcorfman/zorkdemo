@@ -19,9 +19,3 @@ class ConsoleOutput:
                 output.append(self.wrapper.fill(line))
         return output
 
-    def print_lines(self, lines):
-        for line in self.wrap_lines(lines):
-            print(line)
-
-    def print(self, line):
-        print(self.wrap(line))

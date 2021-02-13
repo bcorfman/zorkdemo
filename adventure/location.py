@@ -1,3 +1,6 @@
+from .format import yellow
+
+
 def partition(seq, fn):
     """Partitions one sequence into two sequences, by testing whether each element
     satisfies fn or not. """
@@ -11,10 +14,17 @@ def partition(seq, fn):
 
 
 class Location:
-    def __init__(self, title, description=None, items=tuple()):
-        self.title = title
-        self.description = description
-        self.items = items
+    def __init__(self, **kwargs):
+        self.title = kwargs['title']
+        self._text = kwargs['text']
+        self.items = kwargs['contains']
+
+    @property
+    def description(self):
+        txt = yellow(self.title) + '\n'
+        txt += self._text + '\n'
+        txt += self.list_items()
+        return txt
 
     def list_items(self):
         txt = ''
@@ -22,7 +32,7 @@ class Location:
             # drop items that have no full name or description, since they are "hidden" inside the
             # location description.
             items = [item for item in self.items if item.full_name or item.description]
-            special_items, regular_items = partition(items, lambda x: x.has_long_description)
+            special_items, regular_items = partition(items, lambda x: x.description)
             if regular_items:
                 txt = 'There is '
                 if len(regular_items) == 1:

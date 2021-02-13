@@ -43,8 +43,10 @@ def test_open_door():
 
 def test_house_description():
     h = WestOfHouse()
-    assert(h.description == """West of House
-This is an open field west of a white house, with a boarded front door.""")
+    assert(h.description == """\x1b[33mWest of House\x1b[0m
+This is an open field west of a white house, with a boarded front door.
+There is a small mailbox here.
+A rubber mat saying 'Welcome to Zork!' lies by the door.""")
 
 
 def test_house_list_items_at_start():

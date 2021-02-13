@@ -2,6 +2,7 @@ import os
 import sys
 from .output import ConsoleOutput
 from .house import WestOfHouse
+from .format import underline
 
 
 def cls():
@@ -46,73 +47,32 @@ class Adventure:
                 remaining_tokens.append(tokens[i])
         return remaining_tokens
 
-    def start_game_loop(self):
-        cls()
-        self.output.print('\033[4mZORK Demo\033[0m')
-        self.output.print('')
-        print(self.current_room.title)
-        print(self.current_room.description)
-        print(self.current_room.list_items())
-        input_text = ''
-        while not input_text == 'quit' or input_text == 'exit':
-            self.output.print('')
-            input_text = input('>')
-            tokens = self.remove_articles(input_text.split())
-            command = tokens[0]
-            for cmd, func in self.commands.items():
-                if cmd == command:
-                    func(tokens[1:])
-                    break
-            else:
-                self.output.print(f"I don't understand how to {command} something.")
-
     def open(self, tokens):
-        items = self.current_room.items + self.inventory
-        for token in tokens:
-            for item in items:
-                if item.name == token:
-                    self.output.print(item.open())
+        def cmd(item):
+            return item.open()
+        return self._open_or_close(cmd, tokens)
 
     def close(self, tokens):
+        def cmd(item):
+            return item.close()
+        return self._open_or_close(cmd, tokens)
+
+    def _open_or_close(self, cmd, tokens):
+        txt = ''
         items = self.current_room.items + self.inventory
+        count = len(tokens)
         for token in tokens:
+            if count > 1:
+                txt += f"{token}: "
+            found = False
             for item in items:
                 if item.name == token:
-                    print(item.close())
-
-    def examine(self, names, items=None, examined=None, name_count=None):
-        if not names:
-            return
-        if items is None:
-            items = self.current_room.items + self.inventory
-        if examined is None:
-            examined = set()
-        if name_count is None:
-            name_count = len(names)
-        name = names.pop()
-        found = self._examine(name, items, examined, name_count)
-        examined.update(items)
-        if not found:
-            for item in items:
-                if item.opened:
-                    found = self._examine(name, item.items, examined, name_count)
-                    examined.update(item.items)
-        if not found:
-            self.output.print(f"I don't see any {name} here.")
-        self.examine(names, items, examined, name_count)
-
-    def _examine(self, name, items, examined, name_count):
-        found = False
-        for item in items:
-            if item not in examined and item.name == name:
-                found = True
-                if item not in self.inventory and item.needs_held_to_be_examined:
-                    self.output.print(f'(Taking the {item.name} first)')
-                if name_count == 1:
-                    print(item.examine())
-                else:
-                    self.output.print(f'{name}: {item.examine()}')
-        return found
+                    found = True
+                    txt += cmd(item)
+            else:
+                if not found:
+                    txt += "You can't see any such thing."
+        return txt
 
     def list_inventory(self, tokens):
         txt = 'You are '
@@ -120,14 +80,14 @@ class Adventure:
         if length == 0:
             txt += 'empty handed.'
         elif length == 1:
-            txt += 'holding ' + self.inventory[0].description
+            txt += 'holding ' + self.inventory[0].full_name + '.'
         else:
             for i in range(length-3):
-                txt += self.inventory[i].description + ', '
+                txt += self.inventory[i].full_name + ', '
             for i in range(length-2):
-                txt += self.inventory[i].description + ' and '
-            txt += self.inventory[length-1].description + '.'
-        self.output.print(txt)
+                txt += self.inventory[i].full_name + ' and '
+            txt += self.inventory[length-1].full_name + '.'
+        return self.output.wrap(txt)
 
     def exit(self, tokens):
         result = ''
@@ -137,32 +97,122 @@ class Adventure:
         if result == 'Y':
             sys.exit(0)
 
-    def take(self, tokens, output=True):
-        for item in tokens:
-            # TODO: Needs to be recursive.
-            idx = self.current_room.items.index(item)
-            if idx > -1:
-                i = self.current_room.items.pop(idx)
-                self.inventory.append(i)
-                print(f'{i.name}: taken.')
-            else:
-                print(f"I don't see {item.name} here.")
+    def examine(self, tokens, items=None, examined=None, name_count=None):
+        if not tokens:
+            return ""
+        elif len(tokens) > 1:
+            return "You can't use multiple objects with that verb."
+        if items is None:
+            items = self.current_room.items + self.inventory
+        if examined is None:
+            examined = set()
+        if name_count is None:
+            name_count = len(tokens)
+        name = tokens.pop()
+        txt = self._examine(name, items, examined, name_count)
+        examined.update(items)
+        if not txt:
+            for item in items:
+                if hasattr(item, 'current_state') and item.current_state == 'opened':
+                    items_inside = item.features['contains']
+                    txt += self._examine(name, items_inside, examined, name_count)
+                    examined.update(items_inside)
+                    if txt:
+                        break
+        if not txt:
+            txt += f"I don't see any {name} here."
+        return txt
 
-    def _take(self, token, output=True):
-        pass
+    def _examine(self, name, items, examined, name_count):
+        found = False
+        txt = ''
+        for item in items:
+            if item not in examined and item.name == name:
+                found = True
+                if item not in self.inventory and item.features.get('needs_held_to_be_examined'):
+                    txt += f'(Taking the {item.name} first)\n'
+                    self.take([item.name], None, None, None, False)
+                if name_count == 1:
+                    txt += item.examine()
+                elif name_count > 1:
+                    txt += f'{name}:\n{item.examine()}'
+        return txt
+
+    def take(self, names, items=None, searched=None, name_count=None, output=True):
+        if not names:
+            return ""
+        if items is None:
+            items = self.current_room.items
+        if searched is None:
+            searched = set()
+        if name_count is None:
+            name_count = len(names)
+        name = names.pop()
+        txt = self._take(name, items, searched, name_count, output)
+        searched.update(items)
+        if (not txt and output is True) or output is False:
+            for item in items:
+                if hasattr(item, 'current_state') and item.current_state == 'opened':
+                    items_inside = item.features['contains']
+                    txt += self._take(name, items_inside, searched, name_count, output)
+                    searched.update(items_inside)
+        if not txt and output is True:
+            return f"I don't see any {name} here."
+        txt += self.take(names, items, searched, name_count, output)
+        return txt
+
+    def _take(self, name, items, searched, name_count, output):
+        txt = ''
+        for item in items:
+            if item not in searched and item.name == name:
+                if hasattr(item, 'take') and output:
+                    if name_count == 1:
+                        txt += item.take()
+                    else:
+                        txt += f'{name}: {item.take()}.'
+                elif item not in self.inventory and item.features.get('can_be_taken'):
+                    idx = items.index(item)
+                    if idx > -1:
+                        i = items.pop(idx)
+                        self.inventory.append(i)
+                        if output:
+                            if name_count == 1:
+                                txt += "Taken."
+                            else:
+                                txt += f'{name}: Taken.'
+                            break
+        return txt
 
     def look(self, tokens):
-        pass
+        return self.current_room.description
 
     def drop(self, tokens):
-        for item in tokens:
-            idx = self.inventory.index(item)
-            if idx > -1:
-                i = self.inventory.pop(idx)
-                self.current_room.items.append(i)
-                print(f'{i.name}: dropped\n.')
-            else:
-                print(f"The {item.name} is already here.")
+        name_count = len(tokens)
+        txt = ''
+        for token in tokens:
+            if token in [item.name for item in self.current_room.items]:
+                if name_count == 1:
+                    txt += f'The {token} is already here.'
+                else:
+                    txt += f'{token}: The {token} is already here.\n'
+                continue
+            for item in self.inventory:
+                if token == item.name:
+                    idx = self.inventory.index(item)
+                    if idx > -1:
+                        i = self.inventory.pop(idx)
+                        self.current_room.items.append(i)
+                        if name_count == 1:
+                            txt += f'Dropped.'
+                        else:
+                            txt += f'{item.name}: Dropped.\n'
+                        break
+            if not txt:
+                if name_count == 1:
+                    txt += f"I don't see any {token} here."
+                else:
+                    txt += f"{token}: I don't see any {token} here.\n"
+        return txt.rstrip()  # gets rid of last line feed
 
     def go_north(self, tokens):
         pass
@@ -176,4 +226,27 @@ class Adventure:
     def go_west(self, tokens):
         pass
 
+    def execute(self, command, tokens):
+        for cmd, func in self.commands.items():
+            if cmd == command:
+                return func(tokens)
+        else:
+            return f"I don't understand how to {command} something."
+
+    def start_game_loop(self):
+        cls()
+        print(underline('ZORK Demo'))
+        print()
+        print(self.current_room.description)
+        input_text = ''
+        try:
+            while not input_text == 'quit' or input_text == 'exit':
+                print()
+                input_text = input('>')
+                tokens = self.remove_articles(input_text.split())
+                command = tokens.pop()
+                print(self.execute(command, tokens))
+        except (KeyboardInterrupt, EOFError):
+            print()
+            sys.exit(0)
 
