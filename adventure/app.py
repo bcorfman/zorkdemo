@@ -2,6 +2,7 @@ import os
 import sys
 from .output import ConsoleOutput
 from .westofhouse import WestOfHouse
+from .northofhouse import NorthOfHouse
 from .format import underline
 
 
@@ -11,9 +12,8 @@ def cls():
 
 class Adventure:
     def __init__(self):
-        self.version = 0.1
         self.output = ConsoleOutput()
-        self.rooms = [WestOfHouse()]
+        self.rooms = [WestOfHouse(), NorthOfHouse()]
         self.current_room = self.rooms[0]
         self.inventory = []
         self.commands = {'examine': self.examine,
