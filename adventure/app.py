@@ -238,14 +238,17 @@ class Adventure:
         print(underline('ZORK Demo'))
         print()
         print(self.current_room.description)
+        print()
         input_text = ''
         try:
             while not input_text == 'quit' or input_text == 'exit':
-                print()
                 input_text = input('>')
+                if not input_text:
+                    continue
                 tokens = self.remove_articles(input_text.split())
-                command = tokens.pop()
+                command = tokens.pop(0)
                 print(self.execute(command, tokens))
+                print()
         except (KeyboardInterrupt, EOFError):
             print()
             sys.exit(0)
