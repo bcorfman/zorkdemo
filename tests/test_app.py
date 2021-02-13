@@ -37,32 +37,32 @@ def test_house_read_leaflet_check_inventory():
 
 def test_unknown_verb():
     adventure = Adventure()
-    assert(adventure.execute('watch', ['mat']) == "I don't understand how to watch something.")
+    assert(adventure.execute(['watch', 'mat']) == "I don't understand how to watch something.")
 
 
 def test_examine_unknown_object():
     adventure = Adventure()
-    assert (adventure.execute('examine', ['printer']) == "I don't see any printer here.")
+    assert (adventure.execute(['examine', 'printer']) == "I don't see any printer here.")
 
 
 def test_drop_unknown_object():
     adventure = Adventure()
-    assert (adventure.execute('drop', ['printer']) == "I don't see any printer here.")
+    assert (adventure.execute(['drop', 'printer']) == "I don't see any printer here.")
 
 
 def test_drop_known_but_not_held_object():
     adventure = Adventure()
-    assert (adventure.execute('drop', ['mat']) == "The mat is already here.")
+    assert (adventure.execute(['drop', 'mat']) == "The mat is already here.")
 
 
 def test_take_unknown_object():
     adventure = Adventure()
-    assert (adventure.execute('take', ['printer']) == "I don't see any printer here.")
+    assert (adventure.execute(['take', 'printer']) == "I don't see any printer here.")
 
 
 def test_take_inaccessible_object():
     adventure = Adventure()
-    assert (adventure.execute('take', ['leaflet']) == "I don't see any leaflet here.")
+    assert (adventure.execute(['take', 'leaflet']) == "I don't see any leaflet here.")
 
 
 def test_take_and_drop_mat():

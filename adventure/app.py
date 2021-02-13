@@ -226,7 +226,9 @@ class Adventure:
     def go_west(self, tokens):
         pass
 
-    def execute(self, command, tokens):
+    def execute(self, tokens):
+        tokens = self.remove_articles(tokens)
+        command = tokens.pop(0)
         for cmd, func in self.commands.items():
             if cmd == command:
                 return func(tokens)
@@ -245,9 +247,8 @@ class Adventure:
                 input_text = input('>')
                 if not input_text:
                     continue
-                tokens = self.remove_articles(input_text.split())
-                command = tokens.pop(0)
-                print(self.execute(command, tokens))
+                tokens = input_text.split()
+                print(self.execute(tokens))
                 print()
         except (KeyboardInterrupt, EOFError):
             print()
