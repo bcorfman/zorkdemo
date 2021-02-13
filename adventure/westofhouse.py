@@ -98,10 +98,6 @@ class WelcomeMat(Item):
 class WestOfHouse(Location):
     def __init__(self):
         items = [Mailbox(), BoardedDoor(), WelcomeMat()]
-        super().__init__(title='West of House', contains=items)
+        can_go = {'north': 'NorthOfHouse'}
+        super().__init__(title='West of House', contains=items, accessible=can_go)
 
-    def remove_item(self, item):
-        pass
-
-    def add_item(self, item):
-        pass

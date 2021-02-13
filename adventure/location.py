@@ -36,12 +36,15 @@ class Location:
             txt += line + '\n'
         self._text = txt.rstrip()
         self.items = kwargs['contains']
+        self.accessible_locations = kwargs['accessible']
 
     @property
     def description(self):
         txt = yellow(self.title) + '\n'
-        txt += self._text + '\n'
-        txt += self.list_items()
+        txt += self._text
+        items = self.list_items()
+        if items:
+            txt += '\n' + items
         return txt
 
     def list_items(self):

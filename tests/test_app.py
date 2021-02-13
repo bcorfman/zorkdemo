@@ -92,3 +92,18 @@ def test_open_opened_mailbox():
     adventure = Adventure()
     adventure.open(['mailbox'])
     assert(adventure.open(['mailbox']) == "The mailbox is already open.")
+
+
+def test_go_north_of_house():
+    adventure = Adventure()
+    assert(adventure.go_north([]) == """\x1b[33mNorth of House\x1b[0m
+You are facing the north side of a white house.  There is no door here, and all
+the windows are barred.""")
+    assert(adventure.current_room.title == "North of House")
+
+
+def test_go_north_then_west_of_house():
+    adventure = Adventure()
+    adventure.go_north([])
+    adventure.go_west([])
+    assert(adventure.current_room.title == "West of House")

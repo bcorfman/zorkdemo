@@ -13,8 +13,8 @@ def cls():
 class Adventure:
     def __init__(self):
         self.output = ConsoleOutput()
-        self.rooms = [WestOfHouse(), NorthOfHouse()]
-        self.current_room = self.rooms[0]
+        self.locations = [WestOfHouse(), NorthOfHouse()]
+        self.current_room = self.locations[0]
         self.inventory = []
         self.commands = {'examine': self.examine,
                          'read': self.examine,
@@ -214,17 +214,29 @@ class Adventure:
                     txt += f"{token}: I don't see any {token} here.\n"
         return txt.rstrip()  # gets rid of last line feed
 
+    def _go(self, direction):
+        new_loc = self.current_room.accessible_locations.get(direction)
+        if new_loc:
+            for loc in self.locations:
+                if loc.__class__.__name__ == new_loc:
+                    self.current_room = loc
+                    return self.current_room.description
+            else:
+                return f'ERROR: Cannot access {new_loc}.'
+        else:
+            return "You can't go that way."
+
     def go_north(self, tokens):
-        pass
+        return self._go('north')
 
     def go_south(self, tokens):
-        pass
+        return self._go('south')
 
     def go_east(self, tokens):
-        pass
+        return self._go('east')
 
     def go_west(self, tokens):
-        pass
+        return self._go('west')
 
     def execute(self, tokens):
         tokens = self.remove_articles(tokens)
