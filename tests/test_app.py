@@ -32,7 +32,7 @@ def test_house_read_leaflet_check_inventory():
     adventure = Adventure()
     adventure.open(['mailbox'])
     adventure.examine(['leaflet'])
-    assert(adventure.list_inventory([]) == 'You are holding a leaflet.')
+    assert(adventure.list_inventory([]) == 'You are holding a small leaflet.')
 
 
 def test_unknown_verb():
@@ -83,6 +83,17 @@ def test_take_and_drop_mat_and_leaflet():
     assert(any((item.name == 'mat' or item.name == item.name == 'leaflet' for item in adventure.current_room.items)))
 
 
+def test_open_mailbox_and_look():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    assert(adventure.look([]) == """\x1b[33mWest of House\x1b[0m
+This is an open field west of a white house, with a boarded front door.
+There is a small mailbox here.
+The mailbox contains:
+    A small leaflet.
+A rubber mat saying 'Welcome to Zork!' lies by the door.""")
+
+
 def test_close_already_closed_mailbox():
     adventure = Adventure()
     assert(adventure.close(['mailbox']) == "That's already closed.")
@@ -107,3 +118,38 @@ def test_go_north_then_west_of_house():
     adventure.go_north([])
     adventure.go_west([])
     assert(adventure.current_room.title == "West of House")
+
+
+def test_take_mat_go_north_then_drop_mat():
+    adventure = Adventure()
+    adventure.take(['mat'])
+    adventure.go_north([])
+    adventure.drop(['mat'])
+    assert (adventure.current_room.description == """\x1b[33mNorth of House\x1b[0m
+You are facing the north side of a white house.  There is no door here, and all
+the windows are barred.
+There is a welcome mat here.""")
+
+
+def test_take_mat_and_leaflet():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    assert(adventure.take(['mat', 'leaflet']) == """mat: Taken.
+leaflet: Taken.""")
+
+
+def test_take_leaflet_and_mat():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    assert(adventure.take(['leaflet', 'mat']) == """leaflet: Taken.
+mat: Taken.""")
+
+
+def test_take_and_drop_leaflet_and_mat_then_look():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    adventure.take(['leaflet', 'mat'])
+    adventure.drop(['mat', 'leaflet'])
+    assert(adventure.look([]) == """\x1b[33mWest of House\x1b[0m
+This is an open field west of a white house, with a boarded front door.
+There is a small mailbox, a welcome mat, and a small leaflet here.""")

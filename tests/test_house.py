@@ -3,7 +3,7 @@ from adventure.westofhouse import Leaflet, Mailbox, WelcomeMat, WestOfHouse, Boa
 
 def test_leaflet():
     leaflet = Leaflet()
-    assert(leaflet.description == """    ZORK is a game of adventure, danger, and low cunning.  In it you will
+    assert(leaflet.contents == """    ZORK is a game of adventure, danger, and low cunning.  In it you will
 explore some of the most amazing territory ever seen by mortal man.  Hardened
 adventurers have run screaming from the terrors contained within!
 

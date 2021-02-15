@@ -63,7 +63,3 @@ def light_magenta(text):
 
 def light_cyan(text):
     return ESC + '[92m' + text + ESC + '[0m'
-
-
-
-

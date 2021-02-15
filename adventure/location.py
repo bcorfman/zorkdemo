@@ -64,7 +64,13 @@ class Location:
                     for i in range(len(regular_items)-2):
                         txt += regular_items[i].full_name + ', '
                     txt += regular_items[-2].full_name + ', and '
-                    txt += regular_items[-1].full_name + '.'
+                    txt += regular_items[-1].full_name + ' here.'
+                # list contained items, if any.
+                for item in regular_items:
+                    if hasattr(item, 'list_items'):
+                        item_txt = item.list_items()
+                        if item_txt:
+                            txt += item_txt
             if special_items:
                 if regular_items:
                     txt += '\n'

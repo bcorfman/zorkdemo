@@ -13,5 +13,13 @@ class Item:
     def description(self):
         return self.features.get('description')
 
+    @description.setter
+    def description(self, val):
+        self.features['description'] = val
+
+    @property
+    def contents(self):
+        return self.features.get('contents')
+
     def examine(self):
         return f'I see nothing special about the {self.name}.'

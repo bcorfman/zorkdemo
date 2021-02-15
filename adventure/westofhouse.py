@@ -23,11 +23,11 @@ class Leaflet(Item):
         txt = ''
         for line in ConsoleOutput().wrap_lines(self._paragraphs):
             txt += line + '\n'
-        super().__init__(name='leaflet', full_name='a leaflet', description=txt.rstrip(),
+        super().__init__(name='leaflet', full_name='a small leaflet', contents=txt.rstrip(),
                          needs_held_to_be_examined=True, can_be_taken=True)
 
     def examine(self):
-        return self.description
+        return self.features['contents']
 
 
 class Mailbox(Item, StateMachine):
@@ -36,20 +36,24 @@ class Mailbox(Item, StateMachine):
         StateMachine.__init__(self, states={'opened': self.open, 'closed': self.close}, initial='closed')
 
     def list_items(self):
-        items = self.features['contains']
+        txt = ''
+        items = self.features['contains'] if self.current_state == 'opened' else []
         length = len(items)
-        if length == 0:
-            return 'nothing.'
-        elif length == 1:
-            return items[0].description + '.'
-        else:
-            txt = 'There is '
-            for i in range(length-3):
-                txt += items[i].description + ', '
-            for i in range(length-2):
-                txt += items[i].description + ' and '
-            txt += items[length-1].description + '.'
-            return txt
+        indent = ' ' * 4
+        if length > 0:
+            txt += '\nThe mailbox contains:\n'
+            if length == 1:
+                txt += indent + items[0].full_name.capitalize() + '.'
+            elif length == 2:
+                txt += indent + items[0].full_name.capitalize() + ' and ' + items[1].full_name + ' here.'
+            else:
+                txt += indent
+                for i in range(length-3):
+                    txt += items[i].full_name.capitalize() + ', '
+                for i in range(length-2):
+                    txt += items[i].full_name + ' and '
+                txt += items[length-1].full_name + ' here.'
+        return txt
 
     def open(self):
         if self.current_state == 'closed':
@@ -93,6 +97,9 @@ class WelcomeMat(Item):
 
     def close(self):
         return "That's not something you can close."
+
+    def taken(self):
+        self.description = ""
 
 
 class WestOfHouse(Location):

@@ -81,7 +81,10 @@ class Adventure:
             txt += 'empty handed.'
         elif length == 1:
             txt += 'holding ' + self.inventory[0].full_name + '.'
+        elif length == 2:
+            txt += 'holding ' + self.inventory[0].full_name + ' and ' + self.inventory[1].full_name + ' here.'
         else:
+            txt += 'holding '
             for i in range(length-3):
                 txt += self.inventory[i].full_name + ', '
             for i in range(length-2):
@@ -124,11 +127,9 @@ class Adventure:
         return txt
 
     def _examine(self, name, items, examined, name_count):
-        found = False
         txt = ''
         for item in items:
             if item not in examined and item.name == name:
-                found = True
                 if item not in self.inventory and item.features.get('needs_held_to_be_examined'):
                     txt += f'(Taking the {item.name} first)\n'
                     self.take([item.name], None, None, None, False)
@@ -147,7 +148,7 @@ class Adventure:
             searched = set()
         if name_count is None:
             name_count = len(names)
-        name = names.pop()
+        name = names.pop(0)
         txt = self._take(name, items, searched, name_count, output)
         searched.update(items)
         if (not txt and output is True) or output is False:
@@ -158,8 +159,8 @@ class Adventure:
                     searched.update(items_inside)
         if not txt and output is True:
             return f"I don't see any {name} here."
-        txt += self.take(names, items, searched, name_count, output)
-        return txt
+        txt += self.take(names, items, None, name_count, output)
+        return txt.rstrip()
 
     def _take(self, name, items, searched, name_count, output):
         txt = ''
@@ -174,12 +175,14 @@ class Adventure:
                     idx = items.index(item)
                     if idx > -1:
                         i = items.pop(idx)
+                        if hasattr(i, 'taken'):
+                            i.taken()
                         self.inventory.append(i)
                         if output:
                             if name_count == 1:
                                 txt += "Taken."
                             else:
-                                txt += f'{name}: Taken.'
+                                txt += f'{name}: Taken.\n'
                             break
         return txt
 
@@ -203,7 +206,7 @@ class Adventure:
                         i = self.inventory.pop(idx)
                         self.current_room.items.append(i)
                         if name_count == 1:
-                            txt += f'Dropped.'
+                            txt += 'Dropped.'
                         else:
                             txt += f'{item.name}: Dropped.\n'
                         break
@@ -265,4 +268,3 @@ class Adventure:
         except (KeyboardInterrupt, EOFError):
             print()
             sys.exit(0)
-
