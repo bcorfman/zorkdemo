@@ -30,7 +30,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest py2app
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -40,10 +39,12 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Deploy with py2app
-      run: |
+    - name: Set up distribution directory
+    - run: |
         chmod 755 $HOME # https://github.com/actions/virtual-environments/issues/267
         mkdir -p ~/.dist
-      if: matrix.os == 'macos-latest'
+    - name: Deploy with py2app
+      run: |
         python setup.py py2app
         tar czf zorkdemo-${{ matrix.name }}-${{ matrix.os }}.tar.gz -C ~/.dist ./dist/zorkdemo.app/Contents/MacOS/zorkdemo
+        if: matrix.os == 'macos-latest'
