@@ -40,7 +40,7 @@ jobs:
       run: |
         pytest
     - name: Set up distribution directory
-    - run: |
+      run: |
         chmod 755 $HOME # https://github.com/actions/virtual-environments/issues/267
         mkdir -p ~/.dist
     - name: Deploy with py2app
