@@ -5,13 +5,12 @@ name: Python application
 
 on:
   push:
-    branches: [ main ]
+    branches: [ * ]
   pull_request:
-    branches: [ main ]
+    branches: [ * ]
 
 jobs:
   build:
-    needs: [release]
     strategy:
       matrix:
           os: [ ubuntu-18.04, ubuntu-20.04, macos-latest, windows-latest ]
