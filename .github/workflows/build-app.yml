@@ -47,4 +47,4 @@ jobs:
       run: |
         python setup.py py2app
         tar czf zorkdemo-${{ matrix.name }}-${{ matrix.os }}.tar.gz -C ~/.dist ./dist/zorkdemo.app/Contents/MacOS/zorkdemo
-        if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-latest'
