@@ -1,6 +1,7 @@
 import os
 from .output import ConsoleOutput
 from .format import yellow
+from .util import get_cwd
 
 
 def partition(seq, fn):
@@ -19,7 +20,7 @@ class Location:
     def __init__(self, **kwargs):
         self.title = kwargs['title']
         location_file = self.__class__.__name__ + '.txt'
-        with open(os.path.join('data', location_file)) as f:
+        with open(os.path.join(get_cwd(), 'data', location_file)) as f:
             text = ''
             title = f.readline().strip()
             paragraphs = [title]

@@ -16,8 +16,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-          os: [ ubuntu-18.04, ubuntu-20.04, macos-latest, windows-latest ]
-          python-version: [3.8, 3.9]
+          os: [ ubuntu-latest, macos-latest, windows-latest ]
+          python-version: [3.6, 3.7, 3.8, 3.9]
           name: [ head ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -29,7 +29,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest py2app
+        pip install flake8 pytest pyinstaller
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -39,12 +39,9 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
-    - name: Set up distribution directory
+    - name: Deploy with pyinstaller
       run: |
-        chmod 755 $HOME # https://github.com/actions/virtual-environments/issues/267
-        mkdir -p ~/.dist
-    - name: Deploy with py2app
-      run: |
-        python setup.py py2app
-        tar czf zorkdemo.tar.gz dist/zorkdemo.app/Contents/MacOS/zorkdemo
-      if: matrix.os == 'macos-latest'
+        echo "BUILD_NUMBER = $GITHUB_RUN_NUMBER" >> src/util.py
+        cat src/util.py
+    # pyinstaller zorkdemo.spec
+    #./dist/zorkdemo --version

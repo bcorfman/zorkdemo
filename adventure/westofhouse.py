@@ -3,11 +3,12 @@ from .item import Item
 from .location import Location
 from .output import ConsoleOutput
 from .state import StateMachine
+from .util import get_cwd
 
 
 class Leaflet(Item):
     def __init__(self):
-        with open(os.path.join('data', 'leaflet.txt')) as f:
+        with open(os.path.join(get_cwd(), 'data', 'leaflet.txt')) as f:
             text = '    '
             self._paragraphs = []
             for line in f.readlines():
