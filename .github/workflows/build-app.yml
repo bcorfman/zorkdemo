@@ -59,13 +59,13 @@ jobs:
       run: |
         upload_url=$(cat info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
-      if: matrix.name != 'windows-latest'
+      if: matrix.os != 'windows-latest'
     - name: Set upload_url for Windows
       id: upload_info_win
       run: |
         upload_url=$(type info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
-      if: matrix.name == 'windows-latest'
+      if: matrix.os == 'windows-latest'
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -92,12 +92,12 @@ jobs:
     - name: Create Windows archive
       run: |
         tar -a -c -f dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip dist/zorkdemo
-      if: matrix.name == 'windows-latest'
+      if: matrix.os == 'windows-latest'
     - name: Create non-Windows archive
       run: |
         gzip dist/zorkdemo
         mv dist/zorkdemo.gz dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
-      if: matrix.name != 'windows-latest'
+      if: matrix.os != 'windows-latest'
     - name: Upload Built Zorkdemo for non-Windows
       uses: actions/upload-release-asset@v1
       env:
@@ -107,7 +107,7 @@ jobs:
         asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
         asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
         asset_content_type: application/gzip
-      if: matrix.name != 'windows-latest'
+      if: matrix.os != 'windows-latest'
     - name: Upload Built Zorkdemo for Windows
       uses: actions/upload-release-asset@v1
       env:
@@ -117,7 +117,7 @@ jobs:
         asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
         asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
         asset_content_type: application/zip
-      if: matrix.name == 'windows-latest'
+      if: matrix.os == 'windows-latest'
   metadata:
     name: Publish Release
     needs: [ build ]
