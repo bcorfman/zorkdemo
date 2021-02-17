@@ -41,6 +41,6 @@ jobs:
         pytest
     - name: Deploy with pyinstaller
       run: |
-        echo "BUILD_NUMBER = ${{ GITHUB_RUN_NUMBER }}" >> ${{ GITHUB_WORKSPACE }}/adventure/util.py
+        echo "BUILD_NUMBER = $GITHUB_RUN_NUMBER" >> ${{ GITHUB_WORKSPACE }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ GITHUB_WORKSPACE }}/dist/zorkdemo --version
