@@ -59,11 +59,13 @@ jobs:
       run: |
         upload_url=$(cat info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
+      if: matrix.name != 'windows-latest'
     - name: Set upload_url for Windows
       id: upload_info
       run: |
         upload_url=$(type info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
+      if: matrix.name == 'windows-latest'
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
