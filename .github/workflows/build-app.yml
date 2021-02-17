@@ -17,7 +17,7 @@ jobs:
       fail-fast: false
       matrix:
           os: [ ubuntu-18.04, ubuntu-20.04, macos-latest, windows-latest ]
-          python-version: [3.6, 3.7, 3.8, 3.9]
+          python-version: [3.8, 3.9]
           name: [ head ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -46,5 +46,5 @@ jobs:
     - name: Deploy with py2app
       run: |
         python setup.py py2app
-        ls -R dist/zorkdemo.app/Contents
+        tar czf zorkdemo.tar.gz dist/zorkdemo.app/Contents/MacOS/zorkdemo
       if: matrix.os == 'macos-latest'
