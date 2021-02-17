@@ -50,6 +50,6 @@ jobs:
     - name: Deploy with pyinstaller on MacOS or Linux
       if: matrix.os != 'windows-latest'
       run: |
-        echo "BUILD_NUMBER = ${{ GITHUB_RUN_NUMBER }}" >> $GITHUB_WORKSPACE/adventure/util.py
+        echo "BUILD_NUMBER = ${{ github.run_number }}" >> $GITHUB_WORKSPACE/adventure/util.py
         pyinstaller zorkdemo.spec
         $GITHUB_WORKSPACE/dist/zorkdemo --version
