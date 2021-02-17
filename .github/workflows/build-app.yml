@@ -46,10 +46,10 @@ jobs:
       run: |
         echo "BUILD_NUMBER = ${Env:GITHUB_RUN_NUMBER}" >> ${MY_WORKSPACE}/adventure/util.py
         pyinstaller zorkdemo.spec
-        $MY_WORKSPACE\dist\zorkdemo --version
+        $MY_WORKSPACE/dist/zorkdemo --version
     - name: Deploy with pyinstaller on MacOS or Linux
       if: matrix.os != 'windows-latest'
       run: |
-        echo "BUILD_NUMBER = ${Env:GITHUB_RUN_NUMBER}" >> ${{ Env:GITHUB_WORKSPACE }}/adventure/util.py
+        echo "BUILD_NUMBER = ${{ GITHUB_RUN_NUMBER }}" >> $GITHUB_WORKSPACE/adventure/util.py
         pyinstaller zorkdemo.spec
-        ${{ Env:GITHUB_WORKSPACE }}/dist/zorkdemo --version
+        $GITHUB_WORKSPACE/dist/zorkdemo --version
