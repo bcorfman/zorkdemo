@@ -84,12 +84,12 @@ jobs:
         ${{ github.workspace }}/dist/zorkdemo --version
     - name: Create Windows archive
       run: |
-        tar -a -c -f dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.zip dist/zorkdemo
+        tar -a -c -f dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip dist/zorkdemo
       if: matrix.name == 'windows-latest'
     - name: Create non-Windows archive
       run: |
         gzip dist/zorkdemo
-        mv dist/zorkdemo.gz dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
+        mv dist/zorkdemo.gz dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
       if: matrix.name != 'windows-latest'
     - name: Upload Built Zorkdemo
       uses: actions/upload-release-asset@v1
@@ -97,8 +97,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
-        asset_name: zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
+        asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
+        asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
         asset_content_type: application/gzip
 
   metadata:
