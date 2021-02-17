@@ -51,6 +51,14 @@ jobs:
           name: [ head ]
     runs-on: ${{ matrix.os }}
     steps:
+    - uses: actions/download-artifact@v1
+      with:
+        name: info
+    - name: Set upload_url
+      id: upload_info
+      run: |
+        upload_url=$(cat info/upload_url)
+        echo "::set-output name=upload_url::$upload_url"
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
@@ -74,15 +82,23 @@ jobs:
         echo "BUILD_NUMBER = '${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
-
+    - name: Create Windows archive
+      run: |
+        tar -a -c -f dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.zip dist/zorkdemo
+      if: matrix.name == 'windows-latest'
+    - name: Create non-Windows archive
+      run: |
+        gzip dist/zorkdemo
+        mv dist/zorkdemo.gz dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
+      if: matrix.name != 'windows-latest'
     - name: Upload Built Zorkdemo
       uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.upload_info.outputs.upload_url }}
-        asset_path: zorkdemo-${{ matrix.name }}-${{ matrix.os }}.tar.gz
-        asset_name: zorkdemo-${{ matrix.name }}-${{ matrix.os }}.tar.gz
+        asset_path: dist/zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
+        asset_name: zorkdemo-${{ matrix.name }}-${{ matrix.os }}.gz
         asset_content_type: application/gzip
 
   metadata:

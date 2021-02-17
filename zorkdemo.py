@@ -2,7 +2,7 @@ import argparse
 from adventure.app import Adventure
 try:
     from adventure.util import BUILD_NUMBER  # this is appended to the util module during GitHub Actions deployment
-except AttributeError:
+except ImportError:
     BUILD_NUMBER = ""  # default to an empty string if we can't find a build number
 
 VERSION = '0.2'
