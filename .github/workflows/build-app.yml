@@ -43,6 +43,6 @@ jobs:
       env:
         MY_WORKSPACE: $ {{ github.workspace }}
       run: |
-        echo "BUILD_NUMBER = ${Env:GITHUB_RUN_NUMBER}" >> ${{ Env.MY_WORKSPACE }}/adventure/util.py
+        echo "BUILD_NUMBER = ${Env:GITHUB_RUN_NUMBER}" >> {{ Env.MY_WORKSPACE }}/adventure/util.py
         pyinstaller zorkdemo.spec
-        ${{ Env.MY_WORKSPACE }}/dist/zorkdemo --version
+        {{ Env.MY_WORKSPACE }}/dist/zorkdemo --version
