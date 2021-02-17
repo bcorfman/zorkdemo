@@ -46,5 +46,6 @@ jobs:
     - name: Deploy with py2app
       run: |
         python setup.py py2app
-        ls
+        ls dist
+        tar czf zorkdemo-${{ matrix.name }}-${{ matrix.os }}.tar.gz -C ~/.dist dist/zorkdemo.app/Contents/MacOS/zorkdemo
       if: matrix.os == 'macos-latest'
