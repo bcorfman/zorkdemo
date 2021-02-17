@@ -55,13 +55,13 @@ jobs:
       with:
         name: info
     - name: Set upload_url for non-Windows
-      id: upload_info
+      id: upload_info_nowin
       run: |
         upload_url=$(cat info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
       if: matrix.name != 'windows-latest'
     - name: Set upload_url for Windows
-      id: upload_info
+      id: upload_info_win
       run: |
         upload_url=$(type info/upload_url)
         echo "::set-output name=upload_url::$upload_url"
@@ -103,7 +103,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        upload_url: ${{ steps.upload_info_nowin.outputs.upload_url }}
         asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
         asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
         asset_content_type: application/gzip
@@ -113,7 +113,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.upload_info.outputs.upload_url }}
+        upload_url: ${{ steps.upload_info_win.outputs.upload_url }}
         asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
         asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
         asset_content_type: application/zip
