@@ -28,8 +28,8 @@ jobs:
             aarch64: ./dist/zorkdemo
             name: linux
           - os: windows-latest
-            x86_64: ./dist/zorkdemo
-            aarch64: ./dist/zorkdemo
+            x86_64: ./dist/zorkdemo.exe
+            aarch64: ./dist/zorkdemo.exe
             name: exe
 
     steps:
