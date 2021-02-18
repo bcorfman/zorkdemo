@@ -108,4 +108,3 @@ class WestOfHouse(Location):
         items = [Mailbox(), BoardedDoor(), WelcomeMat()]
         can_go = {'north': 'NorthOfHouse'}
         super().__init__(title='West of House', contains=items, accessible=can_go)
-
