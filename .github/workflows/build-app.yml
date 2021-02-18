@@ -4,69 +4,39 @@
 name: Python application
 
 on:
-  push:
-    branches:
-      - '*'
-  pull_request:
-    branches:
-      - '*'
+  release:
+    types: [created]
+
+env:
+  GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
-  release:
-    name: Create GitHub Release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create tag
-        id: create_tag
-        run: |
-          tag=$(basename "${{ github.ref }}")
-          echo "::set-output name=tag::$tag"
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.create_tag.outputs.tag }}
-          release_name: ${{ steps.create_tag.outputs.tag }}
-          draft: true
-          prerelease: false
-      - name: Create artifact files
-        run: |
-          mkdir info
-          echo "${{ steps.create_release.outputs.id }}" > info/release_id
-          echo "${{ steps.create_release.outputs.upload_url }}" > info/upload_url
-      - uses: actions/upload-artifact@v1
-        with:
-          name: info
-          path: info
-
   build:
-    needs: [release]
-    strategy:
-      fail-fast: false
-      matrix:
-          os: [ ubuntu-latest, macos-latest, windows-latest ]
-          python-version: [3.6, 3.7, 3.8, 3.9]
-          name: [ head ]
     runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-11.0, ubuntu-latest, windows-latest]
+        python-version: [3.9]
+        include:
+          - os: macos-latest
+            x86_64: ./dist/zorkdemo
+            aarch64: ./dist/zorkdemo
+            name: macos
+          - os: ubuntu-latest
+            x86_64: ./dist/zorkdemo
+            aarch64: ./dist/zorkdemo
+            name: linux
+          - os: windows-latest
+            x86_64: ./dist/zorkdemo
+            aarch64: ./dist/zorkdemo
+            name: exe
+
     steps:
-    - uses: actions/download-artifact@v1
-      with:
-        name: info
-    - name: Set upload_url for non-Windows
-      id: upload_info_nowin
-      run: |
-        upload_url=$(cat info/upload_url)
-        echo "::set-output name=upload_url::$upload_url"
-      if: matrix.os != 'windows-latest'
-    - name: Set upload_url for Windows
-      id: upload_info_win
-      run: |
-        upload_url=$(type info/upload_url)
-        echo "::set-output name=upload_url::$upload_url"
-      if: matrix.os == 'windows-latest'
     - uses: actions/checkout@v2
+    - name: Get Release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -89,55 +59,17 @@ jobs:
         echo "BUILD_NUMBER = '${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
-    - name: Create Windows archive
-      run: |
-        tar -a -c -f dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip dist/zorkdemo
-      if: matrix.os == 'windows-latest'
-    - name: Create non-Windows archive
-      run: |
-        gzip dist/zorkdemo
-        mv dist/zorkdemo.gz dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
-      if: matrix.os != 'windows-latest'
-    - name: Upload Built Zorkdemo for non-Windows
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Upload x86_64 Binary
+      uses: actions/upload-release-asset@v1.0.1
       with:
-        upload_url: ${{ steps.upload_info_nowin.outputs.upload_url }}
-        asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
-        asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.gz
-        asset_content_type: application/gzip
-      if: matrix.os != 'windows-latest'
-    - name: Upload Built Zorkdemo for Windows
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: ${{ matrix.x86_64 }}
+        asset_name: zorkdemo.x86_64.${{ matrix.name }}
+        asset_content_type: application/octet-stream
+    - name: Upload aarch64 Binary
+      uses: actions/upload-release-asset@v1.0.1
       with:
-        upload_url: ${{ steps.upload_info_win.outputs.upload_url }}
-        asset_path: dist/zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
-        asset_name: zorkdemo-python-${{ matrix.python-version }}-${{ matrix.os }}.zip
-        asset_content_type: application/zip
-      if: matrix.os == 'windows-latest'
-  metadata:
-    name: Publish Release
-    needs: [ build ]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v1
-        with:
-          name: info
-      - name: Set publish_info
-        id: publish_info
-        run: |
-          release_id=$(cat info/release_id)
-          echo "::set-output name=release_id::$release_id"
-      - uses: eregon/publish-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          release_id: ${{ steps.publish_info.outputs.release_id }}
-      - uses: eregon/keep-last-n-releases@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          n: 3
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        asset_path: ${{ matrix.aarch64 }}
+        asset_name: zorkdemo.aarch64.${{ matrix.name }}
+        asset_content_type: application/octet-stream
