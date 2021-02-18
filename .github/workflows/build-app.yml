@@ -21,15 +21,12 @@ jobs:
         include:
           - os: macos-latest
             x86_64: ./dist/zorkdemo
-            aarch64: ./dist/zorkdemo
             name: macos
           - os: ubuntu-latest
             x86_64: ./dist/zorkdemo
-            aarch64: ./dist/zorkdemo
             name: linux
           - os: windows-latest
             x86_64: ./dist/zorkdemo.exe
-            aarch64: ./dist/zorkdemo.exe
             name: exe
 
     steps:
@@ -65,11 +62,4 @@ jobs:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ${{ matrix.x86_64 }}
         asset_name: zorkdemo.x86_64.${{ matrix.name }}
-        asset_content_type: application/octet-stream
-    - name: Upload aarch64 Binary
-      uses: actions/upload-release-asset@v1.0.1
-      with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
-        asset_path: ${{ matrix.aarch64 }}
-        asset_name: zorkdemo.aarch64.${{ matrix.name }}
         asset_content_type: application/octet-stream
