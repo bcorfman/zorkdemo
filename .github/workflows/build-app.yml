@@ -4,8 +4,11 @@
 name: Python application
 
 on:
+  push:
+    tags:
+      - 'v*'
   release:
-    types: [created]
+    types: [published]
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
