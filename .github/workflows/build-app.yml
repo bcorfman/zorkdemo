@@ -37,10 +37,10 @@ jobs:
         include:
           - os: macos-latest
             x86_64: ./dist/zorkdemo
-            name: macos
+            name: app
           - os: ubuntu-latest
             x86_64: ./dist/zorkdemo
-            name: linux
+            name: bin
           - os: windows-latest
             x86_64: ./dist/zorkdemo.exe
             name: exe
@@ -80,4 +80,3 @@ jobs:
         asset_path: ${{ matrix.x86_64 }}
         asset_name: zorkdemo.x86_64.${{ matrix.name }}
         asset_content_type: application/octet-stream
-
