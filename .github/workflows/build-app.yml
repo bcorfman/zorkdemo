@@ -6,17 +6,30 @@ name: Python application
 on:
   push:
     tags:
-      - 'v*'
-  release:
-    types: [published, created, prereleased]
+      - 'v[0-9]+.*'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  create_release:
+    name: Create release
+    runs-on: ubuntu-latest
+    outputs:
+      upload-url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
 
+  build:
+    needs: create_release
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -31,12 +44,8 @@ jobs:
           - os: windows-latest
             x86_64: ./dist/zorkdemo.exe
             name: exe
-
     steps:
     - uses: actions/checkout@v2
-    - name: Get Release
-      id: get_release
-      uses: bruceadams/get-release@v1.2.0
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -62,13 +71,11 @@ jobs:
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ${{ matrix.x86_64 }}
         asset_name: zorkdemo.x86_64.${{ matrix.name }}
         asset_content_type: application/octet-stream
     - name: Publish Release
       uses: eregon/publish-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        release_id: ${{ steps.create_release.outputs.id }}
+        release_id: ${{ needs.create_release.outputs.id }}
