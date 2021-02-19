@@ -24,7 +24,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          release_id: ${{ github.ref }}
           draft: false
           prerelease: false
 
@@ -77,8 +76,4 @@ jobs:
         asset_path: ${{ matrix.x86_64 }}
         asset_name: zorkdemo.x86_64.${{ matrix.name }}
         asset_content_type: application/octet-stream
-    - name: Publish Release
-      id: publish_release
-      uses: eregon/publish-release@v1
-      with:
-        release_id: ${{ needs.create_release.outputs.id }}
+
