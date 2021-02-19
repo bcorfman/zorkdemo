@@ -24,6 +24,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          release_id: ${{ github.ref }}
           draft: false
           prerelease: false
 
@@ -69,6 +70,7 @@ jobs:
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
     - name: Upload x86_64 Binary
+      id: upload_x86_64_binary
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
@@ -76,6 +78,7 @@ jobs:
         asset_name: zorkdemo.x86_64.${{ matrix.name }}
         asset_content_type: application/octet-stream
     - name: Publish Release
+      id: publish_release
       uses: eregon/publish-release@v1
       with:
         release_id: ${{ needs.create_release.outputs.id }}
