@@ -69,7 +69,6 @@ jobs:
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
     - name: Upload x86_64 Binary
-      id: upload_x86_64_binary
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
