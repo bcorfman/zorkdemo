@@ -68,6 +68,10 @@ jobs:
         echo "BUILD_NUMBER = '${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
+    - name: Change file permission on non-Windows systems
+      run: |
+        chmod 755 ${{ github.workspace }}/dist/zorkdemo
+      if: matrix.os != 'windows-latest'
     - name: Upload x86_64 Binary
       id: upload_x86_64_binary
       uses: actions/upload-release-asset@v1.0.1
