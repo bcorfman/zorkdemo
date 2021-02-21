@@ -8,4 +8,3 @@ def get_cwd():
     except AttributeError:
         wd = os.getcwd()
     return wd
-

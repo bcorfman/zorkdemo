@@ -168,4 +168,3 @@ def test_empty_mailbox():
     adventure.take(['leaflet'])
     adventure.close(['mailbox'])
     assert (adventure.open(['mailbox']) == """You open the mailbox.""")
-

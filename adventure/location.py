@@ -56,25 +56,29 @@ class Location:
             items = [item for item in self.items if item.full_name or item.description]
             special_items, regular_items = partition(items, lambda x: x.description)
             if regular_items:
-                txt = 'There is '
-                if len(regular_items) == 1:
-                    txt += regular_items[0].full_name + ' here.'
-                elif len(regular_items) == 2:
-                    txt += regular_items[0].full_name + ' and ' + regular_items[1].full_name + ' here.'
-                else:
-                    for i in range(len(regular_items)-2):
-                        txt += regular_items[i].full_name + ', '
-                    txt += regular_items[-2].full_name + ', and '
-                    txt += regular_items[-1].full_name + ' here.'
-                # list contained items, if any.
-                for item in regular_items:
-                    if hasattr(item, 'list_items'):
-                        item_txt = item.list_items()
-                        if item_txt:
-                            txt += item_txt
+                txt += self._list_regular_items(regular_items)
             if special_items:
                 if regular_items:
                     txt += '\n'
                 for item in special_items:
                     txt += item.description
+        return txt
+
+    def _list_regular_items(self, regular_items):
+        txt = 'There is '
+        if len(regular_items) == 1:
+            txt += regular_items[0].full_name + ' here.'
+        elif len(regular_items) == 2:
+            txt += regular_items[0].full_name + ' and ' + regular_items[1].full_name + ' here.'
+        else:
+            for i in range(len(regular_items) - 2):
+                txt += regular_items[i].full_name + ', '
+            txt += regular_items[-2].full_name + ', and '
+            txt += regular_items[-1].full_name + ' here.'
+        # list contained items, if any.
+        for item in regular_items:
+            if hasattr(item, 'list_items'):
+                item_txt = item.list_items()
+                if item_txt:
+                    txt += item_txt
         return txt
