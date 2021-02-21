@@ -153,3 +153,10 @@ def test_take_and_drop_leaflet_and_mat_then_look():
     assert(adventure.look([]) == """\x1b[33mWest of House\x1b[0m
 This is an open field west of a white house, with a boarded front door.
 There is a small mailbox, a welcome mat, and a small leaflet here.""")
+
+
+def test_inventory_after_taking_mat_and_leaflet():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    adventure.take(['mat', 'leaflet'])
+    assert(adventure.list_inventory([]) == """You are holding a welcome mat and a small leaflet.""")

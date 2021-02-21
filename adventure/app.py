@@ -82,7 +82,7 @@ class Adventure:
         elif length == 1:
             txt += 'holding ' + self.inventory[0].full_name + '.'
         elif length == 2:
-            txt += 'holding ' + self.inventory[0].full_name + ' and ' + self.inventory[1].full_name + ' here.'
+            txt += 'holding ' + self.inventory[0].full_name + ' and ' + self.inventory[1].full_name + '.'
         else:
             txt += 'holding '
             for i in range(length-3):
@@ -101,30 +101,30 @@ class Adventure:
             sys.exit(0)
 
     def examine(self, tokens, items=None, examined=None, name_count=None):
-        if not tokens:
-            return ""
-        elif len(tokens) > 1:
-            return "You can't use multiple objects with that verb."
-        if items is None:
-            items = self.current_room.items + self.inventory
-        if examined is None:
-            examined = set()
-        if name_count is None:
-            name_count = len(tokens)
-        name = tokens.pop()
-        txt = self._examine(name, items, examined, name_count)
-        examined.update(items)
-        if not txt:
-            for item in items:
-                if hasattr(item, 'current_state') and item.current_state == 'opened':
-                    items_inside = item.features['contains']
-                    txt += self._examine(name, items_inside, examined, name_count)
-                    examined.update(items_inside)
-                    if txt:
-                        break
-        if not txt:
-            txt += f"I don't see any {name} here."
-        return txt
+        txt = ''
+        if tokens:
+            if len(tokens) > 1:
+                txt += "You can't use multiple objects with that verb."
+            if items is None:
+                items = self.current_room.items + self.inventory
+            if examined is None:
+                examined = set()
+            if name_count is None:
+                name_count = len(tokens)
+            name = tokens.pop()
+            txt = self._examine(name, items, examined, name_count)
+            examined.update(items)
+            if not txt:
+                for item in items:
+                    if hasattr(item, 'current_state') and item.current_state == 'opened':
+                        items_inside = item.features['contains']
+                        txt += self._examine(name, items_inside, examined, name_count)
+                        examined.update(items_inside)
+                        if txt:
+                            break
+            if not txt:
+                txt += f"I don't see any {name} here."
+        return txt.rstrip()
 
     def _examine(self, name, items, examined, name_count):
         txt = ''
@@ -135,31 +135,33 @@ class Adventure:
                     self.take([item.name], None, None, None, False)
                 if name_count == 1:
                     txt += item.examine()
+                    break
                 elif name_count > 1:
                     txt += f'{name}:\n{item.examine()}'
+                    break
         return txt
 
     def take(self, names, items=None, searched=None, name_count=None, output=True):
-        if not names:
-            return ""
-        if items is None:
-            items = self.current_room.items
-        if searched is None:
-            searched = set()
-        if name_count is None:
-            name_count = len(names)
-        name = names.pop(0)
-        txt = self._take(name, items, searched, name_count, output)
-        searched.update(items)
-        if (not txt and output is True) or output is False:
-            for item in items:
-                if hasattr(item, 'current_state') and item.current_state == 'opened':
-                    items_inside = item.features['contains']
-                    txt += self._take(name, items_inside, searched, name_count, output)
-                    searched.update(items_inside)
-        if not txt and output is True:
-            return f"I don't see any {name} here."
-        txt += self.take(names, items, None, name_count, output)
+        txt = ''
+        if names:
+            if items is None:
+                items = self.current_room.items
+            if searched is None:
+                searched = set()
+            if name_count is None:
+                name_count = len(names)
+            name = names.pop(0)
+            txt = self._take(name, items, searched, name_count, output)
+            searched.update(items)
+            if (not txt and output is True) or output is False:
+                for item in items:
+                    if hasattr(item, 'current_state') and item.current_state == 'opened':
+                        items_inside = item.features['contains']
+                        txt += self._take(name, items_inside, searched, name_count, output)
+                        searched.update(items_inside)
+            if not txt and output is True:
+                txt += f"I don't see any {name} here."
+            txt += self.take(names, items, None, name_count, output)
         return txt.rstrip()
 
     def _take(self, name, items, searched, name_count, output):
@@ -218,16 +220,19 @@ class Adventure:
         return txt.rstrip()  # gets rid of last line feed
 
     def _go(self, direction):
+        txt = ''
         new_loc = self.current_room.accessible_locations.get(direction)
         if new_loc:
             for loc in self.locations:
                 if loc.__class__.__name__ == new_loc:
                     self.current_room = loc
-                    return self.current_room.description
+                    txt = self.current_room.description
+                    break
             else:
-                return f'ERROR: Cannot access {new_loc}.'
+                txt = f'ERROR: Cannot access {new_loc}.'
         else:
-            return "You can't go that way."
+            txt = "You can't go that way."
+        return txt
 
     def go_north(self, tokens):
         return self._go('north')
