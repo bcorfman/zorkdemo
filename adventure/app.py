@@ -105,12 +105,9 @@ class Adventure:
         if tokens:
             if len(tokens) > 1:
                 txt += "You can't use multiple objects with that verb."
-            if items is None:
-                items = self.current_room.items + self.inventory
-            if examined is None:
-                examined = set()
-            if name_count is None:
-                name_count = len(tokens)
+            items = items or (self.current_room.items + self.inventory)
+            examined = examined or set()
+            name_count = name_count or len(tokens)
             name = tokens.pop()
             txt = self._examine(name, items, examined, name_count)
             examined.update(items)
@@ -144,12 +141,9 @@ class Adventure:
     def take(self, names, items=None, searched=None, name_count=None, output=True):
         txt = ''
         if names:
-            if items is None:
-                items = self.current_room.items
-            if searched is None:
-                searched = set()
-            if name_count is None:
-                name_count = len(names)
+            items = items or self.current_room.items
+            searched = searched or set()
+            name_count = name_count or len(names)
             name = names.pop(0)
             txt = self._take(name, items, searched, name_count, output)
             searched.update(items)
@@ -220,7 +214,6 @@ class Adventure:
         return txt.rstrip()  # gets rid of last line feed
 
     def _go(self, direction):
-        txt = ''
         new_loc = self.current_room.accessible_locations.get(direction)
         if new_loc:
             for loc in self.locations:
@@ -251,9 +244,11 @@ class Adventure:
         command = tokens.pop(0)
         for cmd, func in self.commands.items():
             if cmd == command:
-                return func(tokens)
+                txt = func(tokens)
+                break
         else:
-            return f"I don't understand how to {command} something."
+            txt = f"I don't understand how to {command} something."
+        return txt
 
     def start_game_loop(self):
         cls()
