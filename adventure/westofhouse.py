@@ -59,16 +59,21 @@ class Mailbox(Item, StateMachine):
     def open(self):
         if self.current_state == 'closed':
             self.switch_state('opened')
-            return 'You open the mailbox, revealing a small leaflet.'
+            if self.features.get('contains'):
+                txt = 'You open the mailbox, revealing a small leaflet.'
+            else:
+                txt = 'You open the mailbox.'
         else:
-            return 'The mailbox is already open.'
+            txt = 'The mailbox is already open.'
+        return txt
 
     def close(self):
         if self.current_state == 'opened':
             self.switch_state('closed')
-            return 'You close the mailbox.'
+            txt = 'You close the mailbox.'
         else:
-            return "That's already closed."
+            txt = "That's already closed."
+        return txt
 
     def take(self):
         return 'What a concept!'

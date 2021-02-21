@@ -160,3 +160,12 @@ def test_inventory_after_taking_mat_and_leaflet():
     adventure.open(['mailbox'])
     adventure.take(['mat', 'leaflet'])
     assert(adventure.list_inventory([]) == """You are holding a welcome mat and a small leaflet.""")
+
+
+def test_empty_mailbox():
+    adventure = Adventure()
+    adventure.open(['mailbox'])
+    adventure.take(['leaflet'])
+    adventure.close(['mailbox'])
+    assert (adventure.open(['mailbox']) == """You open the mailbox.""")
+
