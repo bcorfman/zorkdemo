@@ -29,7 +29,7 @@ class Mailbox(Item, StateMachine):
         txt = ''
         items = self.features['contains'] if self.current_state == 'opened' else []
         length = len(items)
-        indent = ' ' * 4
+        indent = '- '
         if length > 0:
             txt += '\nThe mailbox contains:\n'
             if length == 1:

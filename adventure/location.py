@@ -1,4 +1,5 @@
 import os
+from .fmt_md import strong
 from .util import get_cwd
 
 
@@ -27,7 +28,7 @@ class Location:
 
     @property
     def description(self):
-        txt = '**' + self.title + '**\n'
+        txt = strong(self.title) + '\n'
         txt += self._text
         items = self.list_items()
         if items:

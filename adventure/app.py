@@ -1,4 +1,5 @@
 import os
+import pickle
 import sys
 from rich.console import Console
 from .westofhouse import WestOfHouse
@@ -252,7 +253,13 @@ class Adventure:
             txt = f"I don't understand how to {command} something."
         return self._strategy.transform(txt)
 
-    def start_console(self):
+    def admin_save(self) -> bytes:
+        return pickle.dumps([self.inventory, self.locations, self.current_room])
+
+    def admin_load(self, input_bytes: bytes):
+        self.inventory, self.locations, self.current_room = pickle.loads(input_bytes)
+
+    def start_game_loop(self):
         cls()
         txt = '__ZORK Demo__\n\n'
         txt += self.current_room.description + '\n'
