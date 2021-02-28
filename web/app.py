@@ -25,6 +25,12 @@ def create_app():
 app = create_app()
 
 
+@app.cli.command("create-tables")
+def create_tables():
+    """Create (if necessary) DB tables"""
+    db_wrapper.database.create_tables([AdventureStore])
+
+
 @app.route("/")
 def index():
     """homepage / index page"""

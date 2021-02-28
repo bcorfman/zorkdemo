@@ -5,3 +5,6 @@ build/
 dist/
 .vscode
 *.db
+*.env
+*.flaskenv
+
