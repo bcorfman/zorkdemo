@@ -272,4 +272,3 @@ class Adventure:
 
     def start_page(self):
         pass
-
