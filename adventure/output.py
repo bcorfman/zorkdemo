@@ -1,20 +1,28 @@
-import shutil
-import textwrap
+import re
 
 
-class ConsoleOutput:
+class MarkdownRE:
     def __init__(self):
-        self.console_size = shutil.get_terminal_size()
-        self.wrapper = textwrap.TextWrapper(width=self.console_size.columns-1)
+        self.re_emphasis = re.compile(r'(\*)([^*]+)\1')
+        self.re_strong = re.compile(r'(\*{2})(.+?)\1')
+        self.re_underline = re.compile(r'(_{2})(.+?)\1')
 
-    def wrap(self, line):
-        return self.wrapper.fill(line)
 
-    def wrap_lines(self, lines):
-        output = []
-        for line in lines:
-            if not line:
-                output.append('')
-            else:
-                output.append(self.wrapper.fill(line))
-        return output
+class MarkdownToRich(MarkdownRE):
+    def __init__(self):
+        super().__init__()
+
+    def transform(self, text):
+        text = self.re_strong.sub(r'[yellow]\2[/yellow]', text)
+        text = self.re_underline.sub(r'[underline]\2[/underline]', text)
+        return text
+
+
+class MarkdownToHTML(MarkdownRE):
+    def __init__(self):
+        super().__init__()
+
+    def transform(self, text):
+        text = self.re_strong.sub(r'<b>\2</b>', text)
+        text = self.re_underline.sub(r'<u>\2</u>', text)
+        return text

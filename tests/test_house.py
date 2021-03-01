@@ -3,22 +3,13 @@ from adventure.westofhouse import Leaflet, Mailbox, WelcomeMat, WestOfHouse, Boa
 
 def test_leaflet():
     leaflet = Leaflet()
-    assert(leaflet.contents == """    ZORK is a game of adventure, danger, and low cunning.  In it you will
-explore some of the most amazing territory ever seen by mortal man.  Hardened
-adventurers have run screaming from the terrors contained within!
+    assert(leaflet.contents == """    ZORK is a game of adventure, danger, and low cunning.  In it you will explore some of the most amazing territory ever seen by mortal man.  Hardened adventurers have run screaming from the terrors contained within!
 
-    In ZORK the intrepid explorer delves into the forgotten secrets of a lost
-labyrinth deep in the bowels of the earth, searching for vast treasures long
-hidden from prying eyes, treasures guarded by fearsome monsters and diabolical
-traps!
+    In ZORK the intrepid explorer delves into the forgotten secrets of a lost labyrinth deep in the bowels of the earth, searching for vast treasures long hidden from prying eyes, treasures guarded by fearsome monsters and diabolical traps!
 
     No PDP-10 should be without one!
 
-    ZORK was created at the MIT Laboratory for Computer Science, by Tim
-Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the
-ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and
-science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE).
-The current version was written by Brandon Corfman.""")
+    ZORK was created at the MIT Laboratory for Computer Science, by Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE). The current version was written by Brandon Corfman.""")
 
 
 def test_examine_closed_mailbox():
@@ -43,7 +34,7 @@ def test_open_door():
 
 def test_house_description():
     h = WestOfHouse()
-    assert(h.description == """\x1b[33mWest of House\x1b[0m
+    assert(h.description == """**West of House**
 This is an open field west of a white house, with a boarded front door.
 There is a small mailbox here.
 A rubber mat saying 'Welcome to Zork!' lies by the door.""")

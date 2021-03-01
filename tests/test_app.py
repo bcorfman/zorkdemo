@@ -10,22 +10,13 @@ def test_house_open_mailbox_read_leaflet():
     adventure = Adventure()
     adventure.open(['mailbox'])
     assert(adventure.examine(['leaflet']) == """(Taking the leaflet first)
-    ZORK is a game of adventure, danger, and low cunning.  In it you will
-explore some of the most amazing territory ever seen by mortal man.  Hardened
-adventurers have run screaming from the terrors contained within!
+    ZORK is a game of adventure, danger, and low cunning.  In it you will explore some of the most amazing territory ever seen by mortal man.  Hardened adventurers have run screaming from the terrors contained within!
 
-    In ZORK the intrepid explorer delves into the forgotten secrets of a lost
-labyrinth deep in the bowels of the earth, searching for vast treasures long
-hidden from prying eyes, treasures guarded by fearsome monsters and diabolical
-traps!
+    In ZORK the intrepid explorer delves into the forgotten secrets of a lost labyrinth deep in the bowels of the earth, searching for vast treasures long hidden from prying eyes, treasures guarded by fearsome monsters and diabolical traps!
 
     No PDP-10 should be without one!
 
-    ZORK was created at the MIT Laboratory for Computer Science, by Tim
-Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the
-ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and
-science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE).
-The current version was written by Brandon Corfman.""")
+    ZORK was created at the MIT Laboratory for Computer Science, by Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE). The current version was written by Brandon Corfman.""")
 
 
 def test_house_read_leaflet_check_inventory():
@@ -86,7 +77,7 @@ def test_take_and_drop_mat_and_leaflet():
 def test_open_mailbox_and_look():
     adventure = Adventure()
     adventure.open(['mailbox'])
-    assert(adventure.look([]) == """\x1b[33mWest of House\x1b[0m
+    assert(adventure.look([]) == """**West of House**
 This is an open field west of a white house, with a boarded front door.
 There is a small mailbox here.
 The mailbox contains:
@@ -107,9 +98,8 @@ def test_open_opened_mailbox():
 
 def test_go_north_of_house():
     adventure = Adventure()
-    assert(adventure.go_north([]) == """\x1b[33mNorth of House\x1b[0m
-You are facing the north side of a white house.  There is no door here, and all
-the windows are barred.""")
+    assert(adventure.go_north([]) == """**North of House**
+You are facing the north side of a white house.  There is no door here, and all the windows are barred.""")
     assert(adventure.current_room.title == "North of House")
 
 
@@ -125,9 +115,8 @@ def test_take_mat_go_north_then_drop_mat():
     adventure.take(['mat'])
     adventure.go_north([])
     adventure.drop(['mat'])
-    assert (adventure.current_room.description == """\x1b[33mNorth of House\x1b[0m
-You are facing the north side of a white house.  There is no door here, and all
-the windows are barred.
+    assert (adventure.current_room.description == """**North of House**
+You are facing the north side of a white house.  There is no door here, and all the windows are barred.
 There is a welcome mat here.""")
 
 
@@ -150,7 +139,7 @@ def test_take_and_drop_leaflet_and_mat_then_look():
     adventure.open(['mailbox'])
     adventure.take(['leaflet', 'mat'])
     adventure.drop(['mat', 'leaflet'])
-    assert(adventure.look([]) == """\x1b[33mWest of House\x1b[0m
+    assert(adventure.look([]) == """**West of House**
 This is an open field west of a white house, with a boarded front door.
 There is a small mailbox, a welcome mat, and a small leaflet here.""")
 

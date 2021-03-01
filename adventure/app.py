@@ -1,9 +1,11 @@
 import os
 import sys
-from .output import ConsoleOutput
+from rich.console import Console
 from .westofhouse import WestOfHouse
 from .northofhouse import NorthOfHouse
-from .format import underline
+from .output import MarkdownToRich
+
+console = Console(highlight=False)
 
 
 def cls():
@@ -11,8 +13,8 @@ def cls():
 
 
 class Adventure:
-    def __init__(self):
-        self.output = ConsoleOutput()
+    def __init__(self, output_strategy=MarkdownToRich()):
+        self._strategy = output_strategy
         self.locations = [WestOfHouse(), NorthOfHouse()]
         self.current_room = self.locations[0]
         self.inventory = []
@@ -90,7 +92,7 @@ class Adventure:
             for i in range(length-2):
                 txt += self.inventory[i].full_name + ' and '
             txt += self.inventory[length-1].full_name + '.'
-        return self.output.wrap(txt)
+        return txt
 
     def exit(self, tokens):
         result = ''
@@ -248,14 +250,13 @@ class Adventure:
                 break
         else:
             txt = f"I don't understand how to {command} something."
-        return txt
+        return self._strategy.transform(txt)
 
-    def start_game_loop(self):
+    def start_console(self):
         cls()
-        print(underline('ZORK Demo'))
-        print()
-        print(self.current_room.description)
-        print()
+        txt = '__ZORK Demo__\n\n'
+        txt += self.current_room.description + '\n'
+        console.print(self._strategy.transform(txt))
         input_text = ''
         try:
             while not input_text == 'quit' or input_text == 'exit':
@@ -263,8 +264,12 @@ class Adventure:
                 if not input_text:
                     continue
                 tokens = input_text.split()
-                print(self.execute(tokens))
-                print()
+                output = self.execute(tokens) + '\n'
+                console.print(self._strategy.transform(output))
         except (KeyboardInterrupt, EOFError):
             print()
             sys.exit(0)
+
+    def start_page(self):
+        pass
+

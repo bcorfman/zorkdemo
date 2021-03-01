@@ -1,34 +1,23 @@
 import os
 from .item import Item
 from .location import Location
-from .output import ConsoleOutput
+from .output import MarkdownToRich
 from .state import StateMachine
 from .util import get_cwd
 
 
 class Leaflet(Item):
     def __init__(self):
+        self.formatter = MarkdownToRich()
         with open(os.path.join(get_cwd(), 'data', 'leaflet.txt')) as f:
-            text = '    '
-            self._paragraphs = []
-            for line in f.readlines():
-                if line.strip() == '':
-                    self._paragraphs.append(text)
-                    text = '    '
-                else:
-                    if text.strip() == '' and self._paragraphs:  # append a blank line before every paragraph
-                        self._paragraphs.append('')
-                    text += line.strip() + ' '
-            if text.strip():  # add whatever text is at the end.
-                self._paragraphs.append(text)
-        txt = ''
-        for line in ConsoleOutput().wrap_lines(self._paragraphs):
-            txt += line + '\n'
+            txt = f.read()
+            txt = txt.replace(r'\t', r'    ')
         super().__init__(name='leaflet', full_name='a small leaflet', contents=txt.rstrip(),
                          needs_held_to_be_examined=True, can_be_taken=True)
 
     def examine(self):
-        return self.features['contents']
+        markdown = self.features['contents']
+        return self.formatter.transform(markdown)
 
 
 class Mailbox(Item, StateMachine):
