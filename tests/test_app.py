@@ -7,16 +7,22 @@ def test_house_open_mailbox():
 
 
 def test_house_open_mailbox_read_leaflet():
-    adventure = Adventure()
-    adventure.open(['mailbox'])
-    assert(adventure.examine(['leaflet']) == """(Taking the leaflet first)
-    ZORK is a game of adventure, danger, and low cunning.  In it you will explore some of the most amazing territory ever seen by mortal man.  Hardened adventurers have run screaming from the terrors contained within!
-
-    In ZORK the intrepid explorer delves into the forgotten secrets of a lost labyrinth deep in the bowels of the earth, searching for vast treasures long hidden from prying eyes, treasures guarded by fearsome monsters and diabolical traps!
-
-    No PDP-10 should be without one!
-
-    ZORK was created at the MIT Laboratory for Computer Science, by Tim Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE). The current version was written by Brandon Corfman.""")
+    adv = Adventure()
+    adv.open(['mailbox'])
+    assert(adv.examine(['leaflet']) == '(Taking the leaflet first)\n'
+                                       '    ZORK is a game of adventure, danger, and low cunning.  In it you will '
+                                       'explore some of the most amazing territory ever seen by mortal man.  Hardened '
+                                       'adventurers have run screaming from the terrors contained within!\n\n'
+                                       '    In ZORK the intrepid explorer delves into the forgotten secrets of a lost '
+                                       'labyrinth deep in the bowels of the earth, searching for vast treasures long '
+                                       'hidden from prying eyes, treasures guarded by fearsome monsters and diabolical '
+                                       'traps!\n\n'
+                                       '    No PDP-10 should be without one!\n\n'
+                                       '    ZORK was created at the MIT Laboratory for Computer Science, by Tim '
+                                       'Anderson, Marc Blank, Bruce Daniels, and Dave Lebling.  It was inspired by the '
+                                       'ADVENTURE game of Crowther and Woods, and the long tradition of fantasy and '
+                                       'science fiction adventure.  ZORK was originally written in MDL (alias MUDDLE). '
+                                       'The current version was written by Brandon Corfman.')
 
 
 def test_house_read_leaflet_check_inventory():
