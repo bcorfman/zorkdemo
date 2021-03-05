@@ -14,7 +14,7 @@ class FakeAdventure:
     def __init__(self, *arg, **kwargs):
         pass
 
-    def execute(self, data: list[str]) -> str:
+    def execute(self, data):
         return self.responses.get(data[0], f"I really don't know how to {data[0]}.")
 
     def admin_save(self) -> bytes:
