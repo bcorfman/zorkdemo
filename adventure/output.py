@@ -18,6 +18,12 @@ class MarkdownToRich(MarkdownRE):
         return text
 
 
+class MarkdownPassthru:
+    """Markdown raw passthru"""
+    def transform(self, text: str) -> str:
+        return text
+
+
 class MarkdownToHTML(MarkdownRE):
     def __init__(self):
         super().__init__()
