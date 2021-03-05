@@ -1,7 +1,6 @@
 from unittest import mock
 
 import hug
-import pytest
 
 from web.app import api
 

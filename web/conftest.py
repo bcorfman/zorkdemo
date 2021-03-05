@@ -8,7 +8,6 @@ def pytest_configure(config):
     """setup configuration"""
     os.environ["HUG_SETTINGS"] = "test"
     os.environ["SECRET_KEY"] = "test secret key"
-    from .settings import settings
 
 
 def pytest_unconfigure(config):

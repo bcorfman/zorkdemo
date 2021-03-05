@@ -2,6 +2,7 @@
 Format Markdown
 """
 
+
 def emphasize(text):
     return "*" + text + "*"
 

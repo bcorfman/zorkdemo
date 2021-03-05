@@ -33,7 +33,10 @@ def index(session: hug.directives.session):
     """main index / page"""
     starting_text = "resuming..."
     if not session:
-        starting_text = markdown.markdown(Adventure(output_strategy=MarkdownPassthru()).current_room.description)
+        starting_text = markdown.markdown(
+            Adventure(output_strategy=MarkdownPassthru()).current_room.description
+        )
+    # TODO: actually set the session_id if there is one
     return get_template("index.html").render(session_id="", starting_text=starting_text)
 
 

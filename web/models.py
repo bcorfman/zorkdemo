@@ -6,6 +6,7 @@ from playhouse.db_url import connect
 
 database = pw.DatabaseProxy()
 
+
 class BaseModel(pw.Model):
     class Meta:
         database = database
@@ -35,7 +36,7 @@ class AdventureStore(BaseModel):
 
 def init_db(connection_url):
     database.initialize(connect(connection_url))
-    try:        
+    try:
         database.create_tables([AdventureStore], safe=True)
         database.close()
     except pw.OperationalError:

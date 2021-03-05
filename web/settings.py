@@ -1,6 +1,3 @@
-import sys
-from pathlib import Path
-
 from environs import Env
 
 
