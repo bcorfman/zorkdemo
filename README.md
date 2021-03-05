@@ -9,61 +9,47 @@ Two ways to launch the project:
 
 NOTE: the MacOS version does not have code signing built into it yet (that's next on my list!). To run it, you will need to set the binary as executable with `chmod 755` or similar, and after trying to run it once, go through System Preferences: Security and Privacy: General and "Allow the program to run anyway".
 
-## Web (Flask) version
+## Web (Hug) version
 
-In a virtual environment (preferably), install the requirements from the `requirements.txt` file.
+In a virtual environment (preferably), install the requirements from the `requirements.txt` file (i.e. `pip install -r requirements.txt`).
 
 Set the flask application environment variables:
 
-### Option 1
-
-The easier option is to create a `.flaskenv` file in the root of the project with the contents:
+The easiest option is to create a `.env` file in the root of the project with the contents:
 
 ```config
-FLASK_APP=web.app
 SECRET_KEY="<some random key>"
 ```
 
-### Option 2
-
-export variables in your current terminal session:
+alternatively, you can manually set your environment variables for your terminal session but you'll have to remember to do that for every new session.
 
 ```sh
-EXPORT FLASK_APP=web.app
 EXPORT SECRET_KEY="<put something random here>"
-```
-
-### Setting up the DB for the very first use
-
-**NOTE:** this is necessary before running the software for the first time.
-
-In the root of the project, run:
-
-```sh
-flask create-tables
 ```
 
 ### Running the development web server
 In the root of the project, run:
 
 ```sh
-flask run
+hug -m web.app
 ```
 
 Navigate in your browser to:
 
-http://localhost:5000/
+http://localhost:8000/
 
 Have Fun!
 
-If you want to restart, manually navigate to:
+If you want to restart delete your `sid` cookie from your browser and refresh the page.
 
-http://localhost:5000/endsession
-
-This will terminate the session and restart a new session.
-
-**NOTE:** future versions should provide a link to this endpoint on the actual page.
-
-Alternatively, you can delete the session cookie from your browser.
+**NOTE:** future versions should provide a link to an endpoint to achieve something like this.
 
 Or, you could delete your session record from the Sqlite database.
+
+## Web TODO Items
+
+- make endsession actually work
+- provide link to endsession
+- alignment between input and output for seamless experience
+- figure out how to handle quit/exit
+- wsgi file for hooking this up to a real web server and hosting
