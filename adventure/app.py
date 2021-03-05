@@ -259,7 +259,7 @@ class Adventure:
     def admin_load(self, input_bytes: bytes):
         self.inventory, self.locations, self.current_room = pickle.loads(input_bytes)
 
-    def start_game_loop(self):
+    def start_console(self):
         cls()
         txt = '__ZORK Demo__\n\n'
         txt += self.current_room.description + '\n'
