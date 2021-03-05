@@ -1,14 +1,12 @@
 import os
 from .item import Item
 from .location import Location
-from .output import MarkdownToRich
 from .state import StateMachine
 from .util import get_cwd
 
 
 class Leaflet(Item):
     def __init__(self):
-        self.formatter = MarkdownToRich()
         with open(os.path.join(get_cwd(), 'data', 'leaflet.txt')) as f:
             txt = f.read()
             txt = txt.replace(r'\t', r'    ')
@@ -17,7 +15,7 @@ class Leaflet(Item):
 
     def examine(self):
         markdown = self.features['contents']
-        return self.formatter.transform(markdown)
+        return markdown
 
 
 class Mailbox(Item, StateMachine):
@@ -29,7 +27,7 @@ class Mailbox(Item, StateMachine):
         txt = ''
         items = self.features['contains'] if self.current_state == 'opened' else []
         length = len(items)
-        indent = ' ' * 4
+        indent = '- '
         if length > 0:
             txt += '\nThe mailbox contains:\n'
             if length == 1:

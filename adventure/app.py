@@ -1,4 +1,5 @@
 import os
+import pickle
 import sys
 from rich.console import Console
 from .westofhouse import WestOfHouse
@@ -251,6 +252,12 @@ class Adventure:
         else:
             txt = f"I don't understand how to {command} something."
         return self._strategy.transform(txt)
+
+    def admin_save(self) -> bytes:
+        return pickle.dumps([self.inventory, self.locations, self.current_room])
+
+    def admin_load(self, input_bytes: bytes):
+        self.inventory, self.locations, self.current_room = pickle.loads(input_bytes)
 
     def start_console(self):
         cls()

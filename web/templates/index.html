@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tufte-css/1.7.2/tufte.min.css" integrity="sha512-cG7Z4degp9718dDjGjeJmar0+g7RtE/olDe0VRKEFDtOEkm91JSvE7ZxN2+sijkU0AAK3e2xzu7bafBGC/uiqA==" crossorigin="anonymous" />
+        <style>
+            input {
+  border-top-style: hidden;
+  border-right-style: hidden;
+  border-left-style: hidden;
+  border-bottom-style: hidden;
+  background-color: #fffff7;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+#user-input:focus {
+  outline: none;
+}
+        </style>
+        <title>Zork Demo on the Web</title>
+    </head>
+    <body>        
+        <article>
+            <h1>Zork Demo</h1>
+            <p class="subtitle">A Python demo rewrite of Zork</p>
+            <section>
+                <p>Session ID: {{ session_id }}</p>
+            </section>
+            <section id="output-content">
+                <p class="output">{{ starting_text|safe }}</p>
+            </section>
+            <section id="input-stuff">
+                <div>><input id="user-input"></div>
+            </section>
+        </article>
+        <script>
+            const userInput = document.getElementById('user-input');
+            userInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    sendInput(e);
+                }
+            });
+            function sendInput(e) {
+                const text = e.target.value;
+                fetch("http://localhost:8000/api", {
+                    method: "post",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },              
+                    body: JSON.stringify({
+                        input_data: text,
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    var outputContent = document.getElementById('output-content');
+                    outputContent.innerHTML += '<p class="user-input">>' + data.input + '</p>';
+                    outputContent.innerHTML += data.output;
+                });
+                e.target.value = '';
+            }
+        </script>
+    </body>
+</html>
