@@ -42,21 +42,21 @@
             });
             function sendInput(e) {
                 const text = e.target.value;
-                fetch("http://localhost:5000/api", {
+                fetch("http://localhost:8000/api", {
                     method: "post",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     },              
                     body: JSON.stringify({
-                        input: text,
+                        input_data: text,
                     })
                 })
                 .then(response => response.json())
                 .then(data => {
                     var outputContent = document.getElementById('output-content');
                     outputContent.innerHTML += '<p class="user-input">>' + data.input + '</p>';
-                    outputContent.innerHTML += '<p class="output">' + data.output + '</p>';
+                    outputContent.innerHTML += data.output;
                 });
                 e.target.value = '';
             }

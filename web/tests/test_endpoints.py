@@ -1,16 +1,18 @@
-from unittest.mock import patch
+from unittest import mock
 
 import hug
 import pytest
-#from pytest_mock import MockerFixture
-from unittest import mock
+
 from web.app import api
 
 
 class FakeAdventure:
     responses = {
         "look": "**Snowy Woods**\n Whose woods these are I _think_ I know.",
-    }    
+    }
+
+    def __init__(self, *arg, **kwargs):
+        pass
 
     def execute(self, data: list[str]) -> str:
         return self.responses.get(data[0], f"I really don't know how to {data[0]}.")
@@ -27,6 +29,7 @@ class FakeAdventure:
             @property
             def description(self):
                 return FakeAdventure.responses["look"]
+
         return FakeLocation()
 
 

@@ -23,4 +23,3 @@ def test_adventure_store_model_json():
         "create_ts": astore.create_ts.isoformat(),
         "updated_ts": astore.updated_ts.isoformat(),
     }
-

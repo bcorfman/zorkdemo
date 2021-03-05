@@ -1,88 +1,55 @@
-"""web frontent for Zorkdemo"""
-
 import base64
-from uuid import uuid4
 
-from flask import Flask, session, redirect, url_for, request, render_template
+import hug
 import markdown
 
 from adventure.app import Adventure
-from .models import AdventureStore, db_wrapper
+from adventure.output import MarkdownPassthru
+
+from .models import init_db
+from .session_store import AdventureSessionStore
+from .settings import settings
+from .template_loader import get_template
 
 
-def create_app():
-    """Create and configure an instance of the Flask application."""
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object("web.settings")
-
-    with app.app_context():
-        # set global values
-        db_wrapper.init_app(app)
-
-    return app
-
-
-app = create_app()
-
-
-@app.cli.command("create-tables")
-def create_tables():
-    """Create (if necessary) DB tables"""
-    db_wrapper.database.create_tables([AdventureStore])
-
-
-@app.route("/")
-def index():
-    """homepage / index page"""
-    if "session_id" not in session:
-        session["session_id"] = str(uuid4())
-    _, created = AdventureStore.get_or_create(session_id=session["session_id"])
-    starting_text = "resuming session..."
-    if created:
-        adventure = Adventure()
-        starting_text = markdown.markdown(adventure.current_room.description)
-    return render_template(
-        "index.html", session_id=session["session_id"], starting_text=starting_text
+html = hug.get(output=hug.output_format.html)
+api = hug.API(__name__)
+api.http.add_middleware(
+    hug.middleware.SessionMiddleware(
+        AdventureSessionStore(), cookie_secure=False, cookie_http_only=False
     )
+)
+init_db(settings.DATABASE_URL)
 
 
-@app.route("/endsession")
-def endsession():
-    """force the end of a session"""
-    session.pop("session_id", None)
-    return redirect(url_for("index"))
+@hug.get("/HEALTH-CHECK")
+def health_check():
+    """simple health status check page"""
+    return {"status": "okay"}
 
 
-@app.route("/api", methods=["POST"])
-def api():
-    """the /api endpoint for getting user input and returning output"""
+@html.urls("/")
+def index(session: hug.directives.session):
+    """main index / page"""
+    starting_text = "resuming..."
+    if not session:
+        starting_text = markdown.markdown(Adventure(output_strategy=MarkdownPassthru()).current_room.description)
+    return get_template("index.html").render(session_id="", starting_text=starting_text)
 
-    if "session_id" not in session:
-        # TODO: return a better error to the frontend that they probably need to enable cookies
-        return {
-            "input": request.json["input"],
-            "output": "ERROR... session cookie problem!",
-        }
 
-    adventure = Adventure()
+@hug.post("/api")
+def adventure_api(session: hug.directives.session, input_data: str):
+    """the /api endpoint for XMLHttpRequest handling"""
+    adventure = Adventure(output_strategy=MarkdownPassthru())
+    if session and session.get("save_data"):
+        adventure.admin_load(base64.b64decode(session["save_data"].encode()))
+    _output = markdown.markdown(adventure.execute(input_data.split()))
+    session["save_data"] = base64.b64encode(adventure.admin_save()).decode("ascii")
+    return {"input": input_data, "output": _output}
 
-    # load state
-    if session_data := AdventureStore.get_or_none(session_id=session["session_id"]):
-        if session_data.save_data:
-            adventure.admin_load(base64.b64decode(session_data.save_data.encode()))
 
-    # execute the command
-    _output = adventure.execute(request.json["input"].split())
-    output = markdown.markdown(_output)
-
-    # save state
-    if session_data:
-        session_data.save_data = base64.b64encode(adventure.admin_save()).decode(
-            "ascii"
-        )
-        session_data.save()
-
-    return {
-        "input": request.json["input"],
-        "output": f"{output}",
-    }
+@html.urls("/endsession")
+def end_session(session: hug.directives.session):
+    """endpoint to end the current session"""
+    # TODO: delete session data
+    hug.redirect.to("/")
