@@ -7,6 +7,7 @@ from .models import create_tables, drop_tables
 def pytest_configure(config):
     """setup configuration"""
     os.environ["HUG_SETTINGS"] = "test"
+    os.environ["SECRET_KEY"] = "test secret key"
     from .settings import settings
 
 
