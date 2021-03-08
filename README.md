@@ -1,3 +1,4 @@
+[![Python build and test](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml/badge.svg)](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml)
 # zorkdemo
 Runs on Linux, Windows or Mac.
 
