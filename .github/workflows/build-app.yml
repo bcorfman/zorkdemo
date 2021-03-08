@@ -44,6 +44,9 @@ jobs:
           - os: windows-latest
             x86_64: ./dist/zorkdemo.exe
             name: exe
+    env:
+      KEYCHAIN_PATH: zorkdemo.keychain
+      KEYCHAIN_PASSWORD: ${{ openssl rand -base64 32 }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -68,6 +71,11 @@ jobs:
         echo "BUILD_NUMBER = '${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
+    - name: OSX code sign
+      if: matrix.os == 'macos-latest'
+      run: |
+        - echo "Preparing code signing certificate ..."
+        security create-keychain -p ${{ env.KEYCHAIN_PASSWORD }} {{$ env.KEYCHAIN_PATH }}
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
