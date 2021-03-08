@@ -52,6 +52,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Set OS X keychain info
       id: keychain
+      if: matrix.os == 'macos-latest'
       run: |
         path=zorkdemo.keychain
         password=$(openssl rand -base64 32)
