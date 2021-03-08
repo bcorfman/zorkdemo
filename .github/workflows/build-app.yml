@@ -79,7 +79,7 @@ jobs:
       if: matrix.os == 'macos-latest'
       run: |
         echo "Preparing code signing certificate ..."
-        security create-keychain -p ${{ steps.keychain.password }} ${{steps.keychain.path }}
+        security create-keychain -p ${{ steps.keychain.password }} ${{ steps.keychain.path }}
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
