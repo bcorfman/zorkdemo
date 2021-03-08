@@ -1,6 +1,12 @@
 name: Python build and test
 
-on: [push, pull_request]
+on:
+  push:
+    tags-ignore:
+      - v*
+  pull_request:
+    tags-ignore:
+      - v*
 
 jobs:
   build:
