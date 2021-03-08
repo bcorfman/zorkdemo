@@ -75,7 +75,7 @@ jobs:
         echo "Preparing code signing certificate ..."
         KEYCHAIN_PATH=zorkdemo.keychain
         KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
-        security create-keychain -p $KEYCHAIN_PASSWORD KEYCHAIN_PATH
+        security create-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
