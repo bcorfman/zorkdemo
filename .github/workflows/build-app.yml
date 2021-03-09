@@ -76,17 +76,16 @@ jobs:
         KEYCHAIN_PATH=zorkdemo.keychain
         KEYCHAIN_PASSWORD=$(openssl rand -base64 32)
         security create-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        security set-keychain-settings $KEYCHAIN_PATH
-        security list-keychains -d user -s $KEYCHAIN_PATH
         security default-keychain -s $KEYCHAIN_PATH
+        security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
         echo $P12_CERTIFICATE | base64 --decode > cert.p12
         security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        codesign --verbose --deep --force --options runtime --entitlements entitlements.plist --keychain "$KEYCHAIN_PATH" --sign cert.p12 dist/zorkdemo
+        codesign --verbose --deep --force --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign $CERTIFICATE_NAME dist/zorkdemo
       env:
         P12_CERTIFICATE: ${{ secrets.P12_CERT }}
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+        CERTIFICATE_NAME: zorkdemo
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
