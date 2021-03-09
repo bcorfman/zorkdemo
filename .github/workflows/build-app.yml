@@ -70,6 +70,9 @@ jobs:
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
     - name: OSX code sign
+      env:
+        P12_CERTIFICATE: ${{ secrets.P12_CERT }}
+        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
       if: matrix.os == 'macos-latest'
       run: |
         echo "Preparing code signing certificate ..."
@@ -80,8 +83,8 @@ jobs:
         security set-keychain-settings $KEYCHAIN_PATH
         security list-keychains -d user -s $KEYCHAIN_PATH
         security default-keychain -s $KEYCHAIN_PATH
-        echo ${{ secrets.P12_CERT }} | base64 --decode > cert.p12
-        security import cert.p12 -k $KEYCHAIN_PATH -P $(( secrets.P12_PASSWORD }} -T /usr/bin/codesign
+        echo $P12_CERTIFICATE | base64 --decode > cert.p12
+        security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
         security find-identity -p codesigning
         codesign --verbose --deep --force --options runtime --entitlements entitlements.plist --keychain "$KEYCHAIN_PATH" --sign cert.p12 dist/zorkdemo
