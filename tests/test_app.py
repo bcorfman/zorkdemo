@@ -87,7 +87,7 @@ def test_open_mailbox_and_look():
 This is an open field west of a white house, with a boarded front door.
 There is a small mailbox here.
 The mailbox contains:
-- A small leaflet.
+    A small leaflet.
 A rubber mat saying 'Welcome to Zork!' lies by the door.""")
 
 

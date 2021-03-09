@@ -49,11 +49,12 @@ def test_api():
         assert result.status == hug.status.HTTP_200
         assert result.data == {
             "input": "dance",
-            "output": "<p>I really don't know how to dance.</p>",
+            "output": "<p>I really don&rsquo;t know how to dance.</p>",  # smarty quotes
         }
         result = hug.test.post(api, url="/api", params={"input_data": "look"})
         assert result.status == hug.status.HTTP_200
+        # tests for <br /> on \n now
         assert result.data == {
             "input": "look",
-            "output": "<p><strong>Snowy Woods</strong>\n Whose woods these are I <em>think</em> I know.</p>",
+            "output": "<p><strong>Snowy Woods</strong><br />\n Whose woods these are I <em>think</em> I know.</p>",
         }
