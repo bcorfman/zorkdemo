@@ -80,7 +80,7 @@ jobs:
         security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
         security find-identity -v
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        codesign --verbose --deep --force --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign $CERTIFICATE_NAME dist/zorkdemo
+        codesign --verbose --deep --force --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
         ditto -ck -rsrc --sequesterRsrc --keepParent /dist/zorkdemo ${{ matrix.x86_64 }}
       env:
         P12_CERTIFICATE: ${{ secrets.P12_CERT }}
