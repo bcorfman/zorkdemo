@@ -55,6 +55,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest pyinstaller
         pip install -r requirements.txt
+    - name: Install OS X dependencies
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install akeru-inc/tap/xcnotary
+        brew update
+        brew upgrade akeru-inc/tap/xcnotary
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
@@ -80,7 +86,7 @@ jobs:
         security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
         security find-identity -v
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        codesign --verbose --deep --force --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
+        codesign --verbose --deep --timestamp -o runtime --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
         ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ${{ matrix.x86_64 }}
         ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ./dist/zorkdemo.zip
       env:
@@ -91,16 +97,14 @@ jobs:
         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
     - name: Notarize app
       if: matrix.os == 'macos-latest'
-      uses: devbotsxyz/xcode-notarize@v1
-      with:
-        product-path: ./dist/zorkdemo.zip
-        appstore-connect-username: ${{ secrets.NOTARIZATION_USERNAME }}
-        appstore-connect-password: ${{ secrets.NOTARIZATION_PASSWORD }}
+      run: |
+        xcrun altool --store-password-in-keychain-item zorkdemo.keychain -u ${{ secrets.NOTARIZATION_USERNAME }} -p ${{ secrets.NOTARIZATION_PASSWORD }}
+        xcnotary precheck ${{ matrix.x86_64 }}
+        xcnotary notarize ${{ matrix.x86_64 }} --developer-account "${{ secrets.NOTARIZATION_USERNAME }}" --developer-password-keychain-item zorkdemo.keychain
     - name: Staple Release Build
       if: matrix.os == 'macos-latest'
-      uses: devbotsxyz/xcode-staple@v1
-      with:
-        product-path: ${{ matrix.x86_64 }}
+      run: |
+        xcrun stapler staple ${{ matrix.x86_64 }}
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
