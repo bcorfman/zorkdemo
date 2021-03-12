@@ -7,4 +7,4 @@ dist/
 *.db
 *.env
 *.flaskenv
-
+*.p12
