@@ -85,7 +85,7 @@ jobs:
       env:
         P12_CERTIFICATE: ${{ secrets.P12_CERT }}
         P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-        CERTIFICATE_NAME: Brandon.Corfman
+        CERTIFICATE_NAME: "Brandon Corfman"
         KEYCHAIN_PATH: zorkdemo.keychain
         KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
     - name: Notarize app
