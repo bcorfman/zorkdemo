@@ -37,7 +37,7 @@ jobs:
         include:
           - os: macos-latest
             x86_64: ./dist/zorkdemo.app
-            name: macos.bin
+            name: macos.dmg
           - os: ubuntu-latest
             x86_64: ./dist/zorkdemo
             name: bin
@@ -97,8 +97,31 @@ jobs:
       env:
         NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
         NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+    - name: Complete notarization
+      if: matrix.os == 'macos-latest'
+      run: |
+        codesign --verbose --deep --strict=all --check-notarization zorkdemo
+        mkdir staging
+        mv zorkdemo staging/
+        ln -s /Applications staging/Applications
+        hdiutil create -volname ZorkDemo -srcfolder staging -ov -format UDBZ zorkdemo.dmg
+        codesign --verify --verbose --keychain $KEYCHAIN_PATH --sign $CERTIFICATE_NAME zorkdemo.dmg
+        md5 -r zorkdemo.dmg
+      env:
+        CERTIFICATE_NAME: ${{ secrets.CERTIFICATE_NAME }}
+        KEYCHAIN_PATH: zorkdemo.keychain
+        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+    - name: Upload OS X Binary
+      uses: actions/upload-release-asset@v1.0.1
+      if: matrix.os == 'macos-latest'
+      with:
+        upload_url: ${{ needs.create_release.outputs.upload_url }}
+        asset_path: ./staging/zorkdemo.dmg
+        asset_name: zorkdemo.x86_64.${{ matrix.name }}
+        asset_content_type: application/octet-stream
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
+      if: matrix.os != 'macos-latest'
       with:
         upload_url: ${{ needs.create_release.outputs.upload_url }}
         asset_path: ${{ matrix.x86_64 }}
