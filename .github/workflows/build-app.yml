@@ -55,12 +55,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest pyinstaller
         pip install -r requirements.txt
-    - name: Install OS X dependencies
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install akeru-inc/tap/xcnotary
-        brew update
-        brew upgrade akeru-inc/tap/xcnotary
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
