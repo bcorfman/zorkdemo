@@ -70,4 +70,4 @@ do
 done
 
 # Staple the notary ticket
-xcrun stapler staple "$APP_BUNDLE"
+xcrun stapler staple "./dist/$APP_BUNDLE.app"
