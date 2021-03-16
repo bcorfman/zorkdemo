@@ -26,7 +26,7 @@ RESULT=$(xcrun altool --notarize-app --type osx --file "./dist/${APP_BUNDLE}.zip
        --primary-bundle-id "${APP_BUNDLE}.bundle.id" --username "$NOTARIZATION_USERNAME" \
        --password "$NOTARIZATION_PASSWORD" --output-format xml)
 
-if mycmd; then
+if [ $? -ne 0 ]; then
   echo "Submitting $APP_BUNDLE failed:"
   echo "$RESULT"
   exit 1
