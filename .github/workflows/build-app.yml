@@ -101,8 +101,8 @@ jobs:
       run: |
         ./.github/workflows/macos-notarize-app.sh zorkdemo
       env:
-        NOTIFICATION_USERNAME: ${{ secrets.NOTIFICATION_USERNAME }}
-        NOTIFICATION_PASSWORD: ${{ secrets.NOTIFICATION_PASSWORD }}
+        NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+        NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
     - name: Upload x86_64 Binary
       uses: actions/upload-release-asset@v1.0.1
       with:
