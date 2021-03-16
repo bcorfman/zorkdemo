@@ -99,7 +99,7 @@ jobs:
     - name: Notarize app
       if: matrix.os == 'macos-latest'
       run: |
-        ./.github/workflows/macos-notarize-app.sh
+        ./.github/workflows/macos-notarize-app.sh zorkdemo
       env:
         NOTIFICATION_USERNAME: ${{ secrets.NOTIFICATION_USERNAME }}
         NOTIFICATION_PASSWORD: ${{ secrets.NOTIFICATION_PASSWORD }}
