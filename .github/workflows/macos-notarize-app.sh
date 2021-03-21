@@ -18,6 +18,7 @@ cd "$APP_BUNDLE_DIR" || exit 1
 # Package app for submission
 echo "Generating ZIP archive ${APP_BUNDLE}.zip..."
 ditto -c -k --rsrc --keepParent "$APP_BUNDLE" "${APP_BUNDLE}.zip"
+ditto -c -k --sequesterRsrc --keepParent "$APP_BUNDLE" "${APP_BUNDLE}.app"
 cd ..
 
 # Submit for notarization
@@ -70,4 +71,4 @@ do
 done
 
 # Staple the notary ticket
-xcrun stapler staple "./dist/$APP_BUNDLE"
+xcrun stapler staple "./dist/$APP_BUNDLE.app"

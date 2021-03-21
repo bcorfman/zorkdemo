@@ -6,7 +6,7 @@ name: Python application
 on:
   push:
     tags:
-      - 'v[0-9]+.*'
+      - '[0-9]+.*'
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
@@ -66,7 +66,8 @@ jobs:
         pytest
     - name: Deploy with pyinstaller
       run: |
-        echo "BUILD_NUMBER = '${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
+        echo "VERSION = '${{ github.ref }}'" >> ${{ github.workspace }}/adventure/util.py
+        echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
         pyinstaller zorkdemo.spec
         ${{ github.workspace }}/dist/zorkdemo --version
     - name: OSX code sign
@@ -81,7 +82,6 @@ jobs:
         security find-identity -p codesigning
         security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
         codesign --verbose --deep --force --timestamp -o runtime --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
-        echo "ditto"
         ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ${{ matrix.x86_64 }}
         ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ./dist/zorkdemo.zip
       env:

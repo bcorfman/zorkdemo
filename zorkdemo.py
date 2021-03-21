@@ -2,11 +2,14 @@ import argparse
 from adventure.app import Adventure
 from adventure.output import MarkdownToHTML
 try:
+    from adventure.util import VERSION  # this is appended to the util module during GitHub Actions deployment
+except ImportError:
+    VERSION = ""  # default to an empty string if we can't find a build number
+try:
     from adventure.util import BUILD_NUMBER  # this is appended to the util module during GitHub Actions deployment
 except ImportError:
     BUILD_NUMBER = ""  # default to an empty string if we can't find a build number
 
-VERSION = '0.3'
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -14,7 +17,7 @@ if __name__ == '__main__':
     parser.add_argument('--web', action='store_true')
     args = parser.parse_args()
     if args.version:
-        print('ZorkDemo ' + VERSION + ' Build ' + BUILD_NUMBER)
+        print('ZorkDemo ' + VERSION + ' ' + BUILD_NUMBER)
     else:
         if args.web:
             output_strategy = MarkdownToHTML()
