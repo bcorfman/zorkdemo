@@ -1,4 +1,8 @@
 # -*- mode: python ; coding: utf-8 -*-
+import glob
+import os
+import platform
+import sys
 
 block_cipher = None
 
@@ -31,6 +35,7 @@ exe = EXE(pyz,
           runtime_tmpdir=None,
           console=True )
 
+os_name = platform.system()
 if os_name == 'Darwin':
     info_plist = {
         'CFBundleName': ZorkDemo,
