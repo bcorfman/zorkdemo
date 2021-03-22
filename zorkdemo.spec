@@ -38,9 +38,9 @@ exe = EXE(pyz,
 os_name = platform.system()
 if os_name == 'Darwin':
     info_plist = {
-        'CFBundleName': ZorkDemo,
-        'CFBundleDisplayName': ZorkDemo,
-        'CFBundleIdentifier': org.mimetyx.zorkdemo,
+        'CFBundleName': 'ZorkDemo',
+        'CFBundleDisplayName': 'ZorkDemo',
+        'CFBundleIdentifier': 'org.mimetyx.zorkdemo',
         'CFBundleVersion': '%d.%d.%d.%d' % VERSION.split('.')[:4],
         'CFBundleShortVersionString': VERSION.split('.')[:3],
         'LSApplicationCategoryType': 'public.app-category.adventure-games',
