@@ -8,3 +8,4 @@ dist/
 *.env
 *.flaskenv
 *.p12
+.DS_Store

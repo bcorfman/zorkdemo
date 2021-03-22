@@ -45,91 +45,91 @@ jobs:
             x86_64: ./dist/zorkdemo.exe
             name: exe
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 pytest pyinstaller
-        pip install -r requirements.txt
-    - name: Lint with flake8
-      run: |
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
-        pytest
-    - name: Deploy with pyinstaller
-      run: |
-        echo "VERSION = '${{ github.ref }}'" >> ${{ github.workspace }}/adventure/util.py
-        echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
-        pyinstaller zorkdemo.spec
-        ${{ github.workspace }}/dist/zorkdemo --version
-    - name: OSX code sign
-      if: matrix.os == 'macos-latest'
-      run: |
-        echo "Preparing code signing certificate ..."
-        security create-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        security default-keychain -s $KEYCHAIN_PATH
-        security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        echo $P12_CERTIFICATE | base64 --decode > cert.p12
-        security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
-        security find-identity -p codesigning
-        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
-        codesign --verbose --deep --force --timestamp -o runtime --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
-        ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ${{ matrix.x86_64 }}
-        ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ./dist/zorkdemo.zip
-      env:
-        P12_CERTIFICATE: ${{ secrets.P12_CERT }}
-        P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
-        CERTIFICATE_NAME: ${{ secrets.CERTIFICATE_NAME }}
-        KEYCHAIN_PATH: zorkdemo.keychain
-        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-    - name: Notarize app
-      if: matrix.os == 'macos-latest'
-      run: |
-        ./.github/workflows/macos-notarize-app.sh zorkdemo
-      env:
-        NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
-        NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
-    - name: Complete notarization
-      if: matrix.os == 'macos-latest'
-      run: |
-        codesign --verbose --deep --strict=all --check-notarization zorkdemo
-        mkdir staging
-        mv zorkdemo staging/
-        ln -s /Applications staging/Applications
-        hdiutil create -volname ZorkDemo -srcfolder staging -ov -format UDBZ zorkdemo.dmg
-        codesign --verify --verbose --keychain $KEYCHAIN_PATH --sign $CERTIFICATE_NAME zorkdemo.dmg
-        md5 -r zorkdemo.dmg
-      env:
-        CERTIFICATE_NAME: ${{ secrets.CERTIFICATE_NAME }}
-        KEYCHAIN_PATH: zorkdemo.keychain
-        KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-    - name: Upload OS X Binary
-      uses: actions/upload-release-asset@v1.0.1
-      if: matrix.os == 'macos-latest'
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: ./staging/zorkdemo.dmg
-        asset_name: zorkdemo.x86_64.${{ matrix.name }}
-        asset_content_type: application/octet-stream
-    - name: Upload x86_64 Binary
-      uses: actions/upload-release-asset@v1.0.1
-      if: matrix.os != 'macos-latest'
-      with:
-        upload_url: ${{ needs.create_release.outputs.upload_url }}
-        asset_path: ${{ matrix.x86_64 }}
-        asset_name: zorkdemo.x86_64.${{ matrix.name }}
-        asset_content_type: application/octet-stream
-    - name: Keep last 3 releases
-      uses: eregon/keep-last-n-releases@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        n: 3
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest pyinstaller
+          pip install -r requirements.txt
+      - name: Lint with flake8
+        run: |
+          # stop the build if there are Python syntax errors or undefined names
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Test with pytest
+        run: |
+          pytest
+      - name: Deploy with pyinstaller
+        run: |
+          echo "VERSION = '${{ github.ref }}'" >> ${{ github.workspace }}/adventure/util.py
+          echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
+          pyinstaller zorkdemo.spec
+          ${{ github.workspace }}/dist/zorkdemo --version
+      - name: OSX code sign
+        if: matrix.os == 'macos-latest'
+        run: |
+          echo "Preparing code signing certificate ..."
+          security create-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
+          security default-keychain -s $KEYCHAIN_PATH
+          security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
+          echo $P12_CERTIFICATE | base64 --decode > cert.p12
+          security import cert.p12 -k $KEYCHAIN_PATH -P $P12_PASSWORD -T /usr/bin/codesign
+          security find-identity -p codesigning
+          security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k $KEYCHAIN_PASSWORD $KEYCHAIN_PATH
+          codesign --verbose --deep --force --timestamp -o runtime --entitlements entitlements.plist --keychain $KEYCHAIN_PATH --sign "$CERTIFICATE_NAME" dist/zorkdemo
+          ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ${{ matrix.x86_64 }}
+          ditto -ck -rsrc --sequesterRsrc --keepParent ./dist/zorkdemo ./dist/zorkdemo.zip
+        env:
+          P12_CERTIFICATE: ${{ secrets.P12_CERT }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          CERTIFICATE_NAME: ${{ secrets.CERTIFICATE_NAME }}
+          KEYCHAIN_PATH: zorkdemo.keychain
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: Notarize app
+        if: matrix.os == 'macos-latest'
+        run: |
+          ./.github/workflows/macos-notarize-app.sh zorkdemo
+        env:
+          NOTARIZATION_USERNAME: ${{ secrets.NOTARIZATION_USERNAME }}
+          NOTARIZATION_PASSWORD: ${{ secrets.NOTARIZATION_PASSWORD }}
+      - name: Complete notarization
+        if: matrix.os == 'macos-latest'
+        run: |
+          codesign --verbose --deep --strict=all --check-notarization zorkdemo
+          mkdir staging
+          mv zorkdemo staging/
+          ln -s /Applications staging/Applications
+          hdiutil create -volname ZorkDemo -srcfolder staging -ov -format UDBZ zorkdemo.dmg
+          codesign --verify --verbose --keychain $KEYCHAIN_PATH --sign $CERTIFICATE_NAME zorkdemo.dmg
+          md5 -r zorkdemo.dmg
+        env:
+          CERTIFICATE_NAME: ${{ secrets.CERTIFICATE_NAME }}
+          KEYCHAIN_PATH: zorkdemo.keychain
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+      - name: Upload OS X Binary
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os == 'macos-latest'
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ./staging/zorkdemo.dmg
+          asset_name: zorkdemo.x86_64.${{ matrix.name }}
+          asset_content_type: application/octet-stream
+      - name: Upload x86_64 Binary
+        uses: actions/upload-release-asset@v1.0.1
+        if: matrix.os != 'macos-latest'
+        with:
+          upload_url: ${{ needs.create_release.outputs.upload_url }}
+          asset_path: ${{ matrix.x86_64 }}
+          asset_name: zorkdemo.x86_64.${{ matrix.name }}
+          asset_content_type: application/octet-stream
+      - name: Keep last 3 releases
+        uses: eregon/keep-last-n-releases@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          n: 3
