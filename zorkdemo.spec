@@ -3,6 +3,7 @@ import glob
 import os
 import platform
 import sys
+from adventure.util import VERSION
 
 block_cipher = None
 
