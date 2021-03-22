@@ -45,8 +45,8 @@ if os_name == 'Darwin':
     }
 
 
-        app = BUNDLE(coll,
-                     name='zorkdemo.app',
-                     bundle_identifier=None,
-                     info_plist=info_plist
-                     )
+    app = BUNDLE(coll,
+                 name='zorkdemo.app',
+                 bundle_identifier=None,
+                 info_plist=info_plist
+                 )
