@@ -3,6 +3,9 @@ import glob
 import os
 import platform
 import sys
+
+# modify sys.path so it can find version.py in the current working dir.
+sys.path.insert(0, '.')
 from version import VERSION
 
 block_cipher = None
