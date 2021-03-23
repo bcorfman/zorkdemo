@@ -32,15 +32,10 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          [],
-          # Avoid name clash between picard executable and picard module folder
-          name='zorkdemo' if os_name == 'Windows' else 'zorkdemo-run',
+          name='zorkdemo-{}'.format(VERSION),
           debug=False,
-          bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          upx_exclude=[],
-          runtime_tmpdir=None,
           console=True )
 
 coll = COLLECT(exe,
