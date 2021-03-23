@@ -24,6 +24,9 @@ a = Analysis(['zorkdemo.py'],
              noarchive=False)
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
+
+os_name = platform.system()
+
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
@@ -39,8 +42,6 @@ exe = EXE(pyz,
           upx_exclude=[],
           runtime_tmpdir=None,
           console=True )
-
-os_name = platform.system()
 
 coll = COLLECT(exe,
                a.binaries,
