@@ -66,8 +66,8 @@ jobs:
           pytest
       - name: Deploy with pyinstaller
         run: |
-          echo "VERSION = '${{ github.ref }}'" >> ${{ github.workspace }}/adventure/util.py
-          echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/adventure/util.py
+          echo "VERSION = '${{ github.ref }}'" >> ${{ github.workspace }}/version.py
+          echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/version.py
           pyinstaller zorkdemo.spec
           ${{ github.workspace }}/dist/zorkdemo --version
       - name: OSX code sign
