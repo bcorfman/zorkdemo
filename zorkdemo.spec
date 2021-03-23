@@ -40,6 +40,15 @@ exe = EXE(pyz,
           console=True )
 
 os_name = platform.system()
+
+coll = COLLECT(exe,
+               a.binaries,
+               a.zipfiles,
+               a.datas,
+               strip=False,
+               upx=False,
+               name='zorkdemo')
+
 if os_name == 'Darwin':
     VERSION_NUM = VERSION.rsplit('/', 1)[1]
     ver = [int(i) for i in VERSION_NUM.split('.')]
