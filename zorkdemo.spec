@@ -41,12 +41,13 @@ exe = EXE(pyz,
 
 os_name = platform.system()
 if os_name == 'Darwin':
+    ver = [int(i) for i in VERSION.split('.')]
     info_plist = {
         'CFBundleName': 'ZorkDemo',
         'CFBundleDisplayName': 'ZorkDemo',
         'CFBundleIdentifier': 'org.mimetyx.zorkdemo',
-        'CFBundleVersion': '%d.%d.%d.%d' % VERSION.split('.')[:4],
-        'CFBundleShortVersionString': VERSION.split('.')[:3],
+        'CFBundleVersion': '%d.%d.%d.%d' % (ver[0], ver[1], ver[2], ver[3]]),
+        'CFBundleShortVersionString': str(ver[0]) + '.' str(ver[1]),
         'LSApplicationCategoryType': 'public.app-category.adventure-games',
         'LSMinimumSystemVersion': os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.15'),
         'NSHighResolutionCapable': 'True',
