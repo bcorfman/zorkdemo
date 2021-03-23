@@ -20,8 +20,8 @@ a = Analysis(['zorkdemo.py'],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
-             cipher=block_cipher,
-             noarchive=False)
+             cipher=block_cipher)
+
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 
@@ -35,7 +35,7 @@ exe = EXE(pyz,
           name='zorkdemo-{}'.format(VERSION),
           debug=False,
           strip=False,
-          upx=True,
+          upx=False,
           console=True )
 
 coll = COLLECT(exe,
@@ -44,7 +44,7 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=False,
-               name='zorkdemod')
+               name='zorkdemo')
 
 if os_name == 'Darwin':
     VERSION_NUM = VERSION.rsplit('/', 1)[1]
