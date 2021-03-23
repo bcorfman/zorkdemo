@@ -41,8 +41,8 @@ exe = EXE(pyz,
 
 os_name = platform.system()
 if os_name == 'Darwin':
-    print(VERSION.split('.'))
-    ver = [int(i) for i in VERSION.split('.')]
+    VERSION_NUM = VERSION.rsplit('/', 1)
+    ver = [int(i) for i in VERSION_NUM.split('.')]
     info_plist = {
         'CFBundleName': 'ZorkDemo',
         'CFBundleDisplayName': 'ZorkDemo',
