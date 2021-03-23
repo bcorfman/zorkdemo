@@ -46,7 +46,7 @@ if os_name == 'Darwin':
         'CFBundleName': 'ZorkDemo',
         'CFBundleDisplayName': 'ZorkDemo',
         'CFBundleIdentifier': 'org.mimetyx.zorkdemo',
-        'CFBundleVersion': '%d.%d.%d.%d' % (ver[0], ver[1], ver[2], ver[3]]),
+        'CFBundleVersion': '%d.%d.%d.%d' % (ver[0], ver[1], ver[2], ver[3]),
         'CFBundleShortVersionString': str(ver[0]) + '.' str(ver[1]),
         'LSApplicationCategoryType': 'public.app-category.adventure-games',
         'LSMinimumSystemVersion': os.environ.get('MACOSX_DEPLOYMENT_TARGET', '10.15'),
