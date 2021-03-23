@@ -44,7 +44,7 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=False,
-               name='zorkdemo')
+               name='zorkdemod')
 
 if os_name == 'Darwin':
     VERSION_NUM = VERSION.rsplit('/', 1)[1]
