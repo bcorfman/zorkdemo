@@ -1,7 +1,11 @@
 import argparse
 from adventure.app import Adventure
 from adventure.output import MarkdownToHTML
-from version import VERSION, BUILD_NUMBER
+try:
+    from version import VERSION, BUILD_NUMBER
+except ImportError:
+   VERSION = ''
+   BUILD_NUMBER = ''
 
 
 if __name__ == '__main__':
