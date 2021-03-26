@@ -6,12 +6,18 @@ import sys
 
 # modify sys.path so it can find version.py in the current working dir.
 sys.path.insert(0, '.')
-from version import VERSION
+try:
+    print "VERSION found"
+    from version import VERSION
+except ImportError:
+    print "VERSION import error"
+    VERSION='refs/tags/0.3.0.0'
 
 block_cipher = None
+os_name = platform.system()
 
 
-a = Analysis(['zorkdemo.py'],
+a = Analysis(['main.py'],
              binaries=[],
              datas=[('data','data')],
              hiddenimports=[],
@@ -23,16 +29,14 @@ a = Analysis(['zorkdemo.py'],
              cipher=block_cipher)
 
 pyz = PYZ(a.pure, a.zipped_data,
-             cipher=block_cipher)
-
-os_name = platform.system()
+          cipher=block_cipher)
 
 exe = EXE(pyz,
           a.scripts,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='zorkdemo-{}'.format(VERSION),
+          name='Mimetyx-ZorkDemo-{}'.format(VERSION),
           debug=False,
           strip=False,
           upx=False,
@@ -51,7 +55,7 @@ if os_name == 'Darwin':
     ver = [int(i) for i in VERSION_NUM.split('.')]
     info_plist = {
         'CFBundleName': 'ZorkDemo',
-        'CFBundleDisplayName': 'ZorkDemo',
+        'CFBundleDisplayName': 'Mimetyx ZorkDemo',
         'CFBundleIdentifier': 'org.mimetyx.zorkdemo',
         'CFBundleVersion': '%d.%d.%d.%d' % (ver[0], ver[1], ver[2], ver[3]),
         'CFBundleShortVersionString': str(ver[0]) + '.' + str(ver[1]),
