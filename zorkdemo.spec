@@ -7,10 +7,10 @@ import sys
 # modify sys.path so it can find version.py in the current working dir.
 sys.path.insert(0, '.')
 try:
-    print "VERSION found"
+    print("VERSION found")
     from version import VERSION
 except ImportError:
-    print "VERSION import error"
+    print("VERSION import error")
     VERSION='refs/tags/0.3.0.0'
 
 block_cipher = None
