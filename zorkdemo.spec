@@ -7,17 +7,18 @@ import sys
 # modify sys.path so it can find version.py in the current working dir.
 sys.path.insert(0, '.')
 try:
-    print("VERSION found")
     from version import VERSION
+    print("VERSION found")
 except ImportError:
     print("VERSION import error")
-    VERSION='refs/tags/0.3.0.0'
+    VERSION='refs/tags/0.0.0.0'
 
 block_cipher = None
 os_name = platform.system()
 
 
 a = Analysis(['main.py'],
+             pathex=['.'],
              binaries=[],
              datas=[('data','data')],
              hiddenimports=[],
@@ -36,10 +37,10 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='Mimetyx-ZorkDemo-{}'.format(VERSION),
           debug=False,
           strip=False,
           upx=False,
+          name='zorkdemo',
           console=True )
 
 coll = COLLECT(exe,
@@ -48,7 +49,7 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=False,
-               name='zorkdemo.app')
+               name='zorkdemo-dir')
 
 if os_name == 'Darwin':
     VERSION_NUM = VERSION.rsplit('/', 1)[1]
