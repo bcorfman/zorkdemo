@@ -3,9 +3,11 @@
 __pycache__/
 build/
 dist/
+staging/
 .vscode
 *.db
 *.env
 *.flaskenv
 *.p12
+*.dmg
 .DS_Store
