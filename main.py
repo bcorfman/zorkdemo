@@ -4,8 +4,8 @@ from adventure.output import MarkdownToHTML
 try:
     from version import VERSION, BUILD_NUMBER
 except ImportError:
-   VERSION = ''
-   BUILD_NUMBER = ''
+    VERSION = ''
+    BUILD_NUMBER = ''
 
 
 if __name__ == '__main__':
@@ -23,5 +23,3 @@ if __name__ == '__main__':
         else:
             adventure = Adventure()
             adventure.start_console()
-
-
