@@ -70,6 +70,9 @@ jobs:
           echo "BUILD_NUMBER = 'Build ${{ github.run_number }}'" >> ${{ github.workspace }}/version.py
           pyinstaller -y --onefile zorkdemo.spec
           ${{ github.workspace }}/dist/zorkdemo --version
+      - name: Remove zorkdemo.app directory
+        if: matrix.os == 'macos-latest'
+        run: rm -rf zorkdemo.app
       - name: OSX code sign
         if: matrix.os == 'macos-latest'
         run: |
