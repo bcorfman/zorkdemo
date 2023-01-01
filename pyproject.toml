@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "zorkdemo"
+version = "0.3.1"
+description = "A (much simplified) port of a famous adventure game to help teach my daughter how to program in Python."
+authors = ["Brandon Corfman <bcorfman@fastmail.fm>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.7"
+environs = "^9.5.0"
+hug = "^2.6.1"
+Jinja2 = "^3.1.2"
+Markdown = "^3.4.1"
+peewee = "^3.15.4"
+rich = "^13.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.2.0"
+ipython = "^8.7.0"
+coverage = "^7.0.1"
+flake8 = "^6.0.0"
+yapf = "^0.32.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
