@@ -15,9 +15,15 @@ NOTE: the MacOS version does not have code signing built into it yet (that's nex
 
 ## Web (Hug) version
 
-In a virtual environment (preferably), install the requirements from the `requirements.txt` file (i.e. `pip install -r requirements.txt`).
+* Click on the *Open with GitHub Codespaces* badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
 
-Set the flask application environment variables:
+OR
+
+* Install [Python](https://www.python.org) 3.7 or higher
+* Install [Poetry](https://python-poetry.org)
+* At a command prompt in the project directory, type `poetry install` to set up dependencies
+
+Next. set the flask application environment variables:
 
 The easiest option is to create a `.env` file in the root of the project with the contents:
 
