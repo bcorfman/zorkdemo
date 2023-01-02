@@ -19,7 +19,7 @@ NOTE: the MacOS version does not have code signing built into it yet (that's nex
 
 OR
 
-* Install [Python](https://www.python.org) 3.7 or higher
+* Install [Python](https://www.python.org) 3.8 or higher
 * Install [Poetry](https://python-poetry.org)
 * At a command prompt in the project directory, type `poetry install` to set up dependencies
 
