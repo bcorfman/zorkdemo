@@ -1,0 +1,8 @@
+[flake8]
+exclude =
+    __pypackages__
+    .devcontainer
+    .pytest_cache
+    .github
+    .venv
+    .vscode
