@@ -9,16 +9,12 @@ A (much simplified) port of a famous adventure game to help teach my daughter ho
 
 Two easy ways to launch the console project:
 
-1. Click on the Open with GitHub Codespaces badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
+1. Click on the Open with GitHub Codespaces badge above to launch the project in a browser or on your desktop inside Visual Studio Code, then type `poetry run python zorkdemo.py` in the terminal window.
 2. Download one of the binary releases and run the file on your system.
 
 NOTE: the MacOS version does not have code signing built into it yet (that's next on my list!). To run it, you will need to set the binary as executable with `chmod 755` or similar, and after trying to run it once, go through System Preferences: Security and Privacy: General and "Allow the program to run anyway".
 
 ## Web (Hug) version
-
-* Click on the *Open with GitHub Codespaces* badge above to launch the project in a browser or on your desktop inside Visual Studio Code.
-
-OR
 
 * Install [Python](https://www.python.org) 3.8.1 or higher
 * Install [Poetry](https://python-poetry.org)
