@@ -1,7 +1,0 @@
-environs
-hug
-jinja2
-markdown
-peewee
-pytest
-rich
