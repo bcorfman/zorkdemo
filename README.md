@@ -9,16 +9,16 @@ A (much simplified) port of a famous adventure game to help teach my daughter ho
 
 Two easy ways to launch the console project:
 
-1. Click on the Open with GitHub Codespaces badge above to launch the project in a browser or on your desktop inside Visual Studio Code, then type `poetry run python zorkdemo.py` in the terminal window.
+1. Click on the Open with GitHub Codespaces badge above to launch the project in a browser or on your desktop inside Visual Studio Code, then type `uv run python zorkdemo.py` in the terminal window.
 2. Download one of the binary releases and run the file on your system.
 
 NOTE: the MacOS version does not have code signing built into it yet (that's next on my list!). To run it, you will need to set the binary as executable with `chmod 755` or similar, and after trying to run it once, go through System Preferences: Security and Privacy: General and "Allow the program to run anyway".
 
 ## Web (Hug) version
 
-* Install [Python](https://www.python.org) 3.8.1 or higher
-* Install [Poetry](https://python-poetry.org)
-* At a command prompt in the project directory, type `poetry install` to set up dependencies
+* Install [Python](https://www.python.org) 3.10 or higher
+* Install [uv](https://docs.astral.sh/uv/)
+* At a command prompt in the project directory, type `uv sync --all-groups` to set up dependencies
 
 Next. set the flask application environment variables:
 
@@ -39,7 +39,7 @@ EXPORT SECRET_KEY="<put something random here>"
 In the root of the project, run:
 
 ```sh
-hug -m web.app
+uv run hug -m web.app
 ```
 
 Navigate in your browser to:
