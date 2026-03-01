@@ -1,10 +1,10 @@
 .idea/
 .pytest_cache/
 __pycache__/
+.venv/
 build/
 dist/
 .vscode
 *.db
 *.env
 *.flaskenv
-
