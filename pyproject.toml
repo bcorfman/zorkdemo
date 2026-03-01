@@ -13,7 +13,7 @@ dependencies = [
     "Markdown>=3.4.1,<4",
     "marshmallow>=3.13.0,<4",
     "peewee>=3.15.4,<4",
-    "rich>=13.0.0,<14",
+    "rich>=13.0.0,<15",
 ]
 
 [dependency-groups]
