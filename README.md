@@ -1,7 +1,19 @@
 # zorkdemo
 
 [![Python build and test](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml/badge.svg)](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml)
+
+#### 🌏  Open in the Cloud 
+
+Click any of the buttons below to start a new development environment to demo or contribute to the codebase without having to install anything on your machine:
+
+[![Open in VS Code](https://img.shields.io/badge/Open%20in-VS%20Code-blue?logo=visualstudiocode)](https://vscode.dev/github/bcorfman/zorkdemo)
+[![Open in Glitch](https://img.shields.io/badge/Open%20in-Glitch-blue?logo=glitch)](https://glitch.com/edit/#!/import/github/bcorfman/zorkdemo)
 [![Open in Codespaces](https://github.com/codespaces/badge.svg)](https://github.com/codespaces/new?hide_repo_select=true&ref=main&repo=338102781&machine=standardLinux32gb&devcontainer_path=.devcontainer%2Fdevcontainer.json&location=EastUs)
+[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/bcorfman/zorkdemo)
+[![Edit in Codesandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/bcorfman/zorkdemo)
+[![Open in Repl.it](https://replit.com/badge/github/withastro/astro)](https://replit.com/github/bcorfman/zorkdemo)
+[![Open in Codeanywhere](https://codeanywhere.com/img/open-in-codeanywhere-btn.svg)](https://app.codeanywhere.com/#https://github.com/bcorfman/zorkdemo)
+[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/bcorfman/zorkdemo)
 
 Runs on Linux, Windows or Mac.
 
