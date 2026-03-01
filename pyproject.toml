@@ -19,7 +19,7 @@ dependencies = [
 [dependency-groups]
 dev = [
     "coverage>=7.0.1,<8",
-    "flake8>=6.0.0,<7",
+    "flake8>=6.0.0,<8",
     "ipython>=8.7.0,<9",
     "pyinstaller>=6.0.0,<7",
     "pytest>=7.2.0,<10",
