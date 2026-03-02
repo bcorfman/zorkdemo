@@ -16,6 +16,12 @@ This repository is in a staged migration from Hug to FastAPI + TypeScript fronte
 uv sync --all-groups
 ```
 
+### FastAPI backend (Phase 1)
+
+```sh
+uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
 ### Current runnable app (legacy Hug)
 
 ```sh
@@ -36,7 +42,7 @@ Copy and adjust env templates as needed:
 
 ## Testing
 
-Current tests (legacy app):
+Current tests:
 
 ```sh
 uv run pytest
