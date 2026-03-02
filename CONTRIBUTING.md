@@ -34,10 +34,19 @@ uv run alembic -c backend/alembic.ini upgrade head
 uv run hug -m web.app
 ```
 
+### Frontend (Phase 3)
+
+```sh
+cd frontend
+npm install
+npm run dev
+npm run test
+```
+
 ### New app directories
 
 - `backend/`: FastAPI service with SQLAlchemy + Alembic persistence.
-- `frontend/`: TypeScript frontend scaffold (implementation begins in Phase 3).
+- `frontend/`: React + TypeScript app (Vite).
 
 ## Environment Setup
 

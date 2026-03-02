@@ -1,18 +1,20 @@
-# Frontend (Phase 0 Scaffold)
+# Frontend
 
-This directory is reserved for the browser frontend that will be deployed to GitHub Pages.
+React + TypeScript browser client for ZorkDemo, built with Vite.
 
 ## Status
 
-Phase 0 scaffold only. The TypeScript app is created during Phase 3.
+Phase 3 complete.
 
-## Environment Variables (Standardized)
+## Environment Variables
 
-- `VITE_API_BASE_URL`: FastAPI backend base URL.
+- `VITE_API_BASE_URL`: FastAPI backend base URL (defaults to `http://localhost:8000`).
 
-## Planned Run Commands (Phase 3+)
+## Commands
 
 ```sh
 npm install
 npm run dev
+npm run test
+npm run build
 ```
