@@ -50,17 +50,17 @@
 - [x] Manual API flow works end-to-end
 - [x] Command response parity with current Hug behavior
 
-## [ ] Phase 2: Postgres Persistence (Day 2)
-- [ ] Add SQLAlchemy 2.0 + Alembic in backend
-- [ ] Create initial migration for `adventure_sessions`
-- [ ] Add `SessionRepository` abstraction
-- [ ] Implement `PostgresSessionRepository`
-- [ ] Ensure idempotent session create/get semantics
+## [x] Phase 2: Postgres Persistence (Day 2)
+- [x] Add SQLAlchemy 2.0 + Alembic in backend
+- [x] Create initial migration for `adventure_sessions`
+- [x] Add `SessionRepository` abstraction
+- [x] Implement `PostgresSessionRepository`
+- [x] Ensure idempotent session create/get semantics
 
-### [ ] Exit Criteria
-- [ ] Fresh DB migration succeeds
-- [ ] Save/load survives app restart
-- [ ] Reset endpoint clears state correctly
+### [x] Exit Criteria
+- [x] Fresh DB migration succeeds
+- [x] Save/load survives app restart
+- [x] Reset endpoint clears state correctly
 
 ## [ ] Phase 3: TS Frontend MVP (Day 2-3)
 - [ ] Create React UI: transcript, input, status/error, reset/new game

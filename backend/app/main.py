@@ -8,7 +8,8 @@ from adventure.output import MarkdownPassthru
 from web.utils import markdown2html
 
 from .api import create_api_router
-from .repository import PeeweeSessionRepository, initialize_database
+from .db import create_session_factory, initialize_database
+from .repository import PostgresSessionRepository
 from .service import AdventureService
 from .settings import Settings, settings as default_settings
 
@@ -29,7 +30,8 @@ def create_app(
         initialize_database(app_settings.database_url)
 
     if service is None:
-        repository = PeeweeSessionRepository()
+        session_factory = create_session_factory(app_settings.database_url)
+        repository = PostgresSessionRepository(session_factory)
         service = AdventureService(
             repository=repository,
             adventure_factory=_create_adventure,

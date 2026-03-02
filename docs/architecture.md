@@ -12,7 +12,8 @@
 
 - Frontend is static and served by GitHub Pages.
 - Frontend calls backend HTTP API on Railway.
-- Backend persists session save blobs in Postgres.
+- Backend persists session save blobs in Postgres via SQLAlchemy repository.
+- Schema migrations are managed with Alembic (`backend/alembic`).
 
 ## Backend API (Phase 1)
 
@@ -27,6 +28,12 @@
 
 - `DATABASE_URL`
 - `CORS_ALLOW_ORIGINS`
+
+## Persistence Notes (Phase 2)
+
+- Primary table: `adventure_sessions`
+- Repository adapter: `PostgresSessionRepository`
+- Migration command: `uv run alembic -c backend/alembic.ini upgrade head`
 
 ### Frontend
 
