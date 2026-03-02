@@ -26,13 +26,45 @@ Two easy ways to launch the console project:
 
 NOTE: the MacOS version does not have code signing built into it yet (that's next on my list!). To run it, you will need to set the binary as executable with `chmod 755` or similar, and after trying to run it once, go through System Preferences: Security and Privacy: General and "Allow the program to run anyway".
 
-## Web (Hug) version
+## Monorepo Layout (Phase 0)
 
-* Install [Python](https://www.python.org) 3.10 or higher
-* Install [uv](https://docs.astral.sh/uv/)
-* At a command prompt in the project directory, type `uv sync --all-groups` to set up dependencies
+- `adventure/`: shared game engine logic
+- `backend/`: FastAPI service scaffold (target Railway deploy)
+- `frontend/`: TypeScript frontend scaffold (target GitHub Pages deploy)
+- `web/`: current legacy Hug web app
+- `docs/architecture.md`: migration architecture notes
 
-Next. set the flask application environment variables:
+## Local Development Quickstart
+
+Install tooling and Python dependencies:
+
+- Install [Python](https://www.python.org) 3.10+
+- Install [uv](https://docs.astral.sh/uv/)
+- Run `uv sync --all-groups` from repo root
+
+Standardized environment variables:
+
+- Backend: `DATABASE_URL`, `CORS_ALLOW_ORIGINS` (see `backend/.env.example`)
+- Frontend: `VITE_API_BASE_URL` (see `frontend/.env.example`)
+
+### Run Backend (Current Legacy App)
+
+```sh
+uv run hug -m web.app
+```
+
+Navigate to [http://localhost:8000/](http://localhost:8000/)
+
+### Run Frontend (Phase 0 Placeholder)
+
+```sh
+cd frontend
+python -m http.server 5173
+```
+
+Navigate to [http://localhost:5173/](http://localhost:5173/)
+
+## Legacy Hug Notes
 
 The easiest option is to create a `.env` file in the root of the project with the contents:
 
@@ -40,13 +72,13 @@ The easiest option is to create a `.env` file in the root of the project with th
 SECRET_KEY="<some random key>"
 ```
 
-alternatively, you can manually set your environment variables for your terminal session but you'll have to remember to do that for every new session.
+Alternatively, you can manually set your environment variables for your terminal session, but you'll have to remember to do that for every new session.
 
 ```sh
-EXPORT SECRET_KEY="<put something random here>"
+export SECRET_KEY="<put something random here>"
 ```
 
-### Running the development web server
+### Running the legacy development web server
 
 In the root of the project, run:
 
@@ -58,7 +90,7 @@ Navigate in your browser to:
 
 [http://localhost:8000/](http://localhost:8000/)
 
-Have Fun!
+Have fun!
 
 If you want to restart delete your `sid` cookie from your browser and refresh the page.
 
