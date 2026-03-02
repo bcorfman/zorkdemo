@@ -47,7 +47,20 @@ Standardized environment variables:
 - Backend: `DATABASE_URL`, `CORS_ALLOW_ORIGINS` (see `backend/.env.example`)
 - Frontend: `VITE_API_BASE_URL` (see `frontend/.env.example`)
 
-### Run Backend (Current Legacy App)
+### Run Backend (FastAPI v1 API)
+
+```sh
+uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+API endpoints:
+
+- `GET /api/v1/health`
+- `POST /api/v1/session`
+- `POST /api/v1/command`
+- `POST /api/v1/session/reset`
+
+### Run Backend (Legacy Hug App)
 
 ```sh
 uv run hug -m web.app

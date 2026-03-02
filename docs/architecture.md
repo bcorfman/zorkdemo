@@ -14,6 +14,13 @@
 - Frontend calls backend HTTP API on Railway.
 - Backend persists session save blobs in Postgres.
 
+## Backend API (Phase 1)
+
+- `GET /api/v1/health`
+- `POST /api/v1/session`
+- `POST /api/v1/command`
+- `POST /api/v1/session/reset`
+
 ## Environment Variables
 
 ### Backend

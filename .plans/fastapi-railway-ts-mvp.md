@@ -40,15 +40,15 @@
 - [x] Monorepo layout documented
 - [x] README has exact run instructions for both apps
 
-## [ ] Phase 1: FastAPI Adapter over Existing Engine (Day 1-2)
-- [ ] Create FastAPI app with startup DB init + CORS + Pydantic models
-- [ ] Implement service flow: load session -> optional `admin_load` -> execute -> `admin_save`
-- [ ] Implement `/health`, `/session`, `/command`, `/session/reset`
-- [ ] Preserve current markdown-to-HTML response behavior
+## [x] Phase 1: FastAPI Adapter over Existing Engine (Day 1-2)
+- [x] Create FastAPI app with startup DB init + CORS + Pydantic models
+- [x] Implement service flow: load session -> optional `admin_load` -> execute -> `admin_save`
+- [x] Implement `/health`, `/session`, `/command`, `/session/reset`
+- [x] Preserve current markdown-to-HTML response behavior
 
-### [ ] Exit Criteria
-- [ ] Manual API flow works end-to-end
-- [ ] Command response parity with current Hug behavior
+### [x] Exit Criteria
+- [x] Manual API flow works end-to-end
+- [x] Command response parity with current Hug behavior
 
 ## [ ] Phase 2: Postgres Persistence (Day 2)
 - [ ] Add SQLAlchemy 2.0 + Alembic in backend
