@@ -1,6 +1,6 @@
 # Contributing
 
-## Development Workflow (Phase 0)
+## Development Workflow
 
 This repository is in a staged migration from Hug to FastAPI + TypeScript frontend.
 
@@ -16,10 +16,16 @@ This repository is in a staged migration from Hug to FastAPI + TypeScript fronte
 uv sync --all-groups
 ```
 
-### FastAPI backend (Phase 1)
+### FastAPI backend
 
 ```sh
 uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+### Run DB migrations
+
+```sh
+uv run alembic -c backend/alembic.ini upgrade head
 ```
 
 ### Current runnable app (legacy Hug)
@@ -30,7 +36,7 @@ uv run hug -m web.app
 
 ### New app directories
 
-- `backend/`: FastAPI service scaffold (implementation begins in Phase 1).
+- `backend/`: FastAPI service with SQLAlchemy + Alembic persistence.
 - `frontend/`: TypeScript frontend scaffold (implementation begins in Phase 3).
 
 ## Environment Setup

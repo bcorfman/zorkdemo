@@ -29,7 +29,7 @@ NOTE: the MacOS version does not have code signing built into it yet (that's nex
 ## Monorepo Layout (Phase 0)
 
 - `adventure/`: shared game engine logic
-- `backend/`: FastAPI service scaffold (target Railway deploy)
+- `backend/`: FastAPI service (SQLAlchemy + Alembic, target Railway deploy)
 - `frontend/`: TypeScript frontend scaffold (target GitHub Pages deploy)
 - `web/`: current legacy Hug web app
 - `docs/architecture.md`: migration architecture notes
@@ -50,6 +50,7 @@ Standardized environment variables:
 ### Run Backend (FastAPI v1 API)
 
 ```sh
+uv run alembic -c backend/alembic.ini upgrade head
 uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
@@ -72,7 +73,7 @@ Navigate to [http://localhost:8000/](http://localhost:8000/)
 
 ```sh
 cd frontend
-python -m http.server 5173
+uv run python -m http.server 5173
 ```
 
 Navigate to [http://localhost:5173/](http://localhost:5173/)

@@ -20,7 +20,7 @@ class FakeService:
 
 
 def test_health_check():
-    app = create_app(service=FakeService())
+    app = create_app(service=FakeService(), init_database_on_startup=False)
     client = TestClient(app)
 
     response = client.get("/api/v1/health")
@@ -30,7 +30,7 @@ def test_health_check():
 
 
 def test_create_session_endpoint():
-    app = create_app(service=FakeService())
+    app = create_app(service=FakeService(), init_database_on_startup=False)
     client = TestClient(app)
 
     response = client.post("/api/v1/session", json={})
@@ -40,7 +40,7 @@ def test_create_session_endpoint():
 
 
 def test_command_endpoint():
-    app = create_app(service=FakeService())
+    app = create_app(service=FakeService(), init_database_on_startup=False)
     client = TestClient(app)
 
     response = client.post(
@@ -58,7 +58,7 @@ def test_command_endpoint():
 
 
 def test_reset_endpoint():
-    app = create_app(service=FakeService())
+    app = create_app(service=FakeService(), init_database_on_startup=False)
     client = TestClient(app)
 
     response = client.post("/api/v1/session/reset", json={"session_id": "abc123"})

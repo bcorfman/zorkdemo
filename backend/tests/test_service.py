@@ -58,6 +58,21 @@ def test_create_session_generates_uuid_when_missing():
     assert result["created"] is True
 
 
+def test_create_session_with_existing_id_is_idempotent():
+    repo = InMemorySessionRepository()
+    service = AdventureService(
+        repository=repo,
+        adventure_factory=FakeAdventure,
+        markdown_renderer=lambda text: text,
+    )
+
+    first = service.create_session("fixed-id")
+    second = service.create_session("fixed-id")
+
+    assert first == {"session_id": "fixed-id", "created": True}
+    assert second == {"session_id": "fixed-id", "created": False}
+
+
 def test_execute_command_loads_and_saves_state():
     repo = InMemorySessionRepository()
     session_id = "session-1"

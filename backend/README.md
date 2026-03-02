@@ -1,10 +1,10 @@
-# Backend (Phase 0 Scaffold)
+# Backend
 
-This directory is reserved for the FastAPI backend service that will run on Railway.
+This directory contains the FastAPI backend service that will run on Railway.
 
 ## Status
 
-Phase 1 complete. FastAPI v1 endpoints are available in `backend.app.main`.
+Phase 2 complete. Session persistence now uses SQLAlchemy with Alembic migrations.
 
 ## Environment Variables (Standardized)
 
@@ -15,6 +15,12 @@ Phase 1 complete. FastAPI v1 endpoints are available in `backend.app.main`.
 
 ```sh
 uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+## Database Migrations
+
+```sh
+uv run alembic -c backend/alembic.ini upgrade head
 ```
 
 ## API Endpoints
