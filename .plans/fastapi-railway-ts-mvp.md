@@ -62,17 +62,17 @@
 - [x] Save/load survives app restart
 - [x] Reset endpoint clears state correctly
 
-## [ ] Phase 3: TS Frontend MVP (Day 2-3)
-- [ ] Create React UI: transcript, input, status/error, reset/new game
-- [ ] Implement session bootstrap from `localStorage`
-- [ ] Implement command send/receive flow with loading states
-- [ ] Configure `VITE_API_BASE_URL` for environment-specific backend URL
-- [ ] Ensure production build works for GitHub Pages
+## [x] Phase 3: TS Frontend MVP (Day 2-3)
+- [x] Create React UI: transcript, input, status/error, reset/new game
+- [x] Implement session bootstrap from `localStorage`
+- [x] Implement command send/receive flow with loading states
+- [x] Configure `VITE_API_BASE_URL` for environment-specific backend URL
+- [x] Ensure production build works for GitHub Pages
 
-### [ ] Exit Criteria
-- [ ] App playable from GitHub Pages
-- [ ] Refresh resumes session
-- [ ] Reset starts a fresh session
+### [x] Exit Criteria
+- [x] App playable from GitHub Pages
+- [x] Refresh resumes session
+- [x] Reset starts a fresh session
 
 ## [ ] Phase 4: Deployments + CI/CD (Day 3-4)
 - [ ] Deploy backend service to Railway
