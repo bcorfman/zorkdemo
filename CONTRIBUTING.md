@@ -28,6 +28,13 @@ uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 uv run alembic -c backend/alembic.ini upgrade head
 ```
 
+### Deployment variables
+
+- GitHub Pages frontend build: `VITE_API_BASE_URL` (repository variable)
+- Railway backend deploy workflow:
+  - secret: `RAILWAY_TOKEN`
+  - variables: `RAILWAY_SERVICE`, optional `BACKEND_HEALTHCHECK_URL`
+
 ### Current runnable app (legacy Hug)
 
 ```sh

@@ -77,9 +77,9 @@
 ## [ ] Phase 4: Deployments + CI/CD (Day 3-4)
 - [ ] Deploy backend service to Railway
 - [ ] Attach Railway Postgres plugin
-- [ ] Configure backend env vars and health check
-- [ ] Configure GitHub Action to build/deploy frontend to Pages
-- [ ] Configure production CORS for GitHub Pages origin(s)
+- [x] Configure backend env vars and health check
+- [x] Configure GitHub Action to build/deploy frontend to Pages
+- [x] Configure production CORS for GitHub Pages origin(s)
 
 ### [ ] Exit Criteria
 - [ ] Railway API healthy

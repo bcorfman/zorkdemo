@@ -25,12 +25,8 @@ class Leaflet(Item):
 
 class Mailbox(Item, StateMachine):
     def __init__(self):
-        Item.__init__(
-            self, "mailbox", full_name="a small mailbox", contains=[Leaflet()]
-        )
-        StateMachine.__init__(
-            self, states={"opened": self.open, "closed": self.close}, initial="closed"
-        )
+        Item.__init__(self, "mailbox", full_name="a small mailbox", contains=[Leaflet()])
+        StateMachine.__init__(self, states={"opened": self.open, "closed": self.close}, initial="closed")
 
     def list_items(self):
         txt = ""
@@ -42,13 +38,7 @@ class Mailbox(Item, StateMachine):
             if length == 1:
                 txt += indent + items[0].full_name.capitalize() + "."
             elif length == 2:
-                txt += (
-                    indent
-                    + items[0].full_name.capitalize()
-                    + " and "
-                    + items[1].full_name
-                    + " here."
-                )
+                txt += indent + items[0].full_name.capitalize() + " and " + items[1].full_name + " here."
             else:
                 txt += indent
                 for i in range(length - 3):

@@ -23,6 +23,14 @@ uv run uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 uv run alembic -c backend/alembic.ini upgrade head
 ```
 
+## Railway Deployment
+
+- Railway config file: `railway.toml`
+- Health check path: `/api/v1/health`
+- Required env vars:
+  - `DATABASE_URL`
+  - `CORS_ALLOW_ORIGINS` (include `https://bcorfman.github.io` for production frontend)
+
 ## API Endpoints
 
 - `GET /api/v1/health`

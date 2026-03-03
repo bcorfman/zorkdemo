@@ -17,10 +17,7 @@ def test_alembic_upgrade_creates_sessions_table(tmp_path: Path):
     engine = create_engine(database_url)
     with engine.connect() as connection:
         row = connection.execute(
-            text(
-                "SELECT name FROM sqlite_master WHERE type='table' "
-                "AND name='adventure_sessions'"
-            )
+            text("SELECT name FROM sqlite_master WHERE type='table' AND name='adventure_sessions'")
         ).fetchone()
 
     assert row is not None

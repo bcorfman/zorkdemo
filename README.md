@@ -47,6 +47,38 @@ Standardized environment variables:
 - Backend: `DATABASE_URL`, `CORS_ALLOW_ORIGINS` (see `backend/.env.example`)
 - Frontend: `VITE_API_BASE_URL` (see `frontend/.env.example`)
 
+## Makefile Workflow
+
+Key targets:
+
+- `make setup`: install project tooling (`uv`, and Node/npm if missing)
+- `make install`: install runtime dependencies only
+- `make devinstall`: install full dev/test dependencies
+- `make lint`: run `ruff check`
+- `make format`: run `ruff format`
+- `make test`: run Python + frontend tests
+- `make run`: ensure local backend is up, launch frontend dev server, and open browser
+
+## Deployment (Phase 4)
+
+### Frontend (GitHub Pages)
+
+- Workflow: [.github/workflows/deploy-frontend-pages.yml](/home/bcorfman/dev/zorkdemo/.github/workflows/deploy-frontend-pages.yml)
+- Set repository variable `VITE_API_BASE_URL` to your Railway backend URL (example: `https://<service>.up.railway.app`).
+- Push to `main` to build and publish `frontend/dist`.
+
+### Backend (Railway)
+
+- Deployment config: [railway.toml](/home/bcorfman/dev/zorkdemo/railway.toml)
+- Health endpoint used by deployment config: `/api/v1/health`
+- Required Railway env vars:
+  - `DATABASE_URL` (from Railway Postgres plugin)
+  - `CORS_ALLOW_ORIGINS` (must include your GitHub Pages URL)
+- Optional GitHub Actions deploy workflow: [.github/workflows/deploy-backend-railway.yml](/home/bcorfman/dev/zorkdemo/.github/workflows/deploy-backend-railway.yml)
+  - Requires secret `RAILWAY_TOKEN`
+  - Requires repo variable `RAILWAY_SERVICE`
+  - Optional repo variable `BACKEND_HEALTHCHECK_URL`
+
 ### Run Backend (FastAPI v1 API)
 
 ```sh
