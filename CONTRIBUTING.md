@@ -69,3 +69,19 @@ Current tests:
 ```sh
 uv run pytest
 ```
+
+## Contributor Quickstart (Under 10 Minutes)
+
+1. `make setup`
+2. `make devinstall`
+3. `uv run alembic -c backend/alembic.ini upgrade head`
+4. `make run`
+5. In a second terminal, run `make test`
+
+## Extending Commands And Content
+
+See [docs/extending-game.md](/home/bcorfman/dev/zorkdemo/docs/extending-game.md) for:
+
+- adding new locations and items
+- registering new commands in `adventure/app.py`
+- updating tests for game and API behavior
