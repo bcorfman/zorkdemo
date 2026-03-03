@@ -1,3 +1,26 @@
+Metadata-Version: 2.4
+Name: zorkdemo
+Version: 0.3.1
+Summary: A (much simplified) port of a famous adventure game to help teach my daughter how to program in Python.
+Author-email: Brandon Corfman <bcorfman@fastmail.fm>
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: alembic<2,>=1.15.0
+Requires-Dist: environs<15,>=9.5.0
+Requires-Dist: fastapi<1,>=0.115.0
+Requires-Dist: hug<3,>=2.6.1
+Requires-Dist: Jinja2<4,>=3.1.2
+Requires-Dist: Markdown<4,>=3.4.1
+Requires-Dist: marshmallow<4,>=3.13.0
+Requires-Dist: peewee<4,>=3.15.4
+Requires-Dist: psycopg[binary]<4,>=3.2.0
+Requires-Dist: rich<15,>=13.0.0
+Requires-Dist: SQLAlchemy<3,>=2.0.35
+Requires-Dist: uvicorn<1,>=0.32.0
+Dynamic: license-file
+
 # zorkdemo
 
 [![Python build and test](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml/badge.svg)](https://github.com/bcorfman/zorkdemo/actions/workflows/build-test.yml)
@@ -78,12 +101,6 @@ Key targets:
   - Requires secret `RAILWAY_TOKEN`
   - Requires repo variable `RAILWAY_SERVICE`
   - Optional repo variable `BACKEND_HEALTHCHECK_URL`
-
-## Extending The Game
-
-For adding new locations, items, and commands, see:
-
-- [docs/extending-game.md](/home/bcorfman/dev/zorkdemo/docs/extending-game.md)
 
 ### Run Backend (FastAPI v1 API)
 

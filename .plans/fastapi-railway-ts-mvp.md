@@ -74,28 +74,28 @@
 - [x] Refresh resumes session
 - [x] Reset starts a fresh session
 
-## [ ] Phase 4: Deployments + CI/CD (Day 3-4)
-- [ ] Deploy backend service to Railway
-- [ ] Attach Railway Postgres plugin
+## [x] Phase 4: Deployments + CI/CD (Day 3-4)
+- [x] Deploy backend service to Railway
+- [x] Attach Railway Postgres plugin
 - [x] Configure backend env vars and health check
 - [x] Configure GitHub Action to build/deploy frontend to Pages
 - [x] Configure production CORS for GitHub Pages origin(s)
 
-### [ ] Exit Criteria
-- [ ] Railway API healthy
-- [ ] GitHub Pages deployed successfully
-- [ ] Frontend can call production API without CORS errors
+### [x] Exit Criteria
+- [x] Railway API healthy
+- [x] GitHub Pages deployed successfully
+- [x] Frontend can call production API without CORS errors
 
-## [ ] Phase 5: Quality, Tests, Contributor UX (Day 4-5)
-- [ ] Backend route tests (`health/session/command/reset`)
-- [ ] Backend service + persistence tests
-- [ ] Frontend API + UI behavior tests
-- [ ] End-to-end smoke test for play/resume/reset
-- [ ] Add contributor docs for extending content and commands
+## [x] Phase 5: Quality, Tests, Contributor UX (Day 4-5)
+- [x] Backend route tests (`health/session/command/reset`)
+- [x] Backend service + persistence tests
+- [x] Frontend API + UI behavior tests
+- [x] End-to-end smoke test for play/resume/reset
+- [x] Add contributor docs for extending content and commands
 
-### [ ] Exit Criteria
-- [ ] CI green for backend + frontend
-- [ ] New contributor can run project in <10 minutes from docs
+### [x] Exit Criteria
+- [x] CI green for backend + frontend
+- [x] New contributor can run project in <10 minutes from docs
 
 ## [ ] Data-Driven Expandability (MVP-Compatible Staging)
 - [ ] Keep existing Python engine for MVP

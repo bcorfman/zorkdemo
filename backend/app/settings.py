@@ -13,12 +13,7 @@ class Settings:
         self.cors_allow_origins = self._parse_origins(
             env.str(
                 "CORS_ALLOW_ORIGINS",
-                default=(
-                    "http://localhost:5173,"
-                    "http://127.0.0.1:5173,"
-                    "http://localhost:8000,"
-                    "https://bcorfman.github.io"
-                ),
+                default=("http://localhost:5173,http://127.0.0.1:5173,http://localhost:8000,https://bcorfman.github.io"),
             )
         )
 
