@@ -57,7 +57,15 @@ Key targets:
 - `make lint`: run `ruff check`
 - `make format`: run `ruff format`
 - `make test`: run Python + frontend tests
-- `make run`: ensure local backend is up, launch frontend dev server, and open browser
+- `make run`: ensure local backend is up, launch frontend dev server, and open browser (Linux/macOS/Windows)
+
+`make run` uses `uv run python -m backend.app.dev_runner` for cross-platform process startup, health checks, and browser opening.
+
+Optional `make run` variables:
+
+- `BACKEND_HOST`, `BACKEND_PORT`, `FRONTEND_HOST`, `FRONTEND_PORT`
+- `DATABASE_URL`, `CORS_ALLOW_ORIGINS`
+- `BACKEND_LOG` (default: `.tmp/zorkdemo-backend.log`)
 
 ## Deployment (Phase 4)
 

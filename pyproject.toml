@@ -51,6 +51,10 @@ select = ["E", "F"]
 [tool.ruff.format]
 quote-style = "double"
 
+[tool.pytest.ini_options]
+testpaths = ["tests", "web/tests", "backend/tests"]
+filterwarnings = ["ignore::DeprecationWarning"]
+
 [build-system]
 requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
