@@ -1,6 +1,5 @@
 PACKAGE := zorkdemo
 PACKAGE_DIR := .
-SHELL := env PYTHON_VERSION=3.10 /bin/bash
 .SILENT: setup install devinstall test run lint format all ensure-backend
 
 PYTHON_VERSION ?= 3.10
@@ -12,6 +11,7 @@ BACKEND_URL ?= http://$(BACKEND_HOST):$(BACKEND_PORT)
 FRONTEND_URL ?= http://$(FRONTEND_HOST):$(FRONTEND_PORT)
 DATABASE_URL ?= sqlite:///sessions.db
 CORS_ALLOW_ORIGINS ?= http://localhost:5173,http://127.0.0.1:5173
+BACKEND_LOG ?= .tmp/zorkdemo-backend.log
 
 setup:
 	if ! command -v uv >/dev/null 2>&1; then \
@@ -42,28 +42,21 @@ test:
 	cd frontend && npm run test
 
 ensure-backend:
-	if ! curl -fsS "$(BACKEND_URL)/api/v1/health" >/dev/null 2>&1; then \
-		echo "Starting backend at $(BACKEND_URL)"; \
-		DATABASE_URL="$(DATABASE_URL)" CORS_ALLOW_ORIGINS="$(CORS_ALLOW_ORIGINS)" uv run alembic -c backend/alembic.ini upgrade head; \
-		DATABASE_URL="$(DATABASE_URL)" CORS_ALLOW_ORIGINS="$(CORS_ALLOW_ORIGINS)" uv run uvicorn backend.app.main:app --host $(BACKEND_HOST) --port $(BACKEND_PORT) > /tmp/zorkdemo-backend.log 2>&1 & \
-		sleep 2; \
-	fi
-	if ! curl -fsS "$(BACKEND_URL)/api/v1/health" >/dev/null 2>&1; then \
-		echo "Backend failed to start. See /tmp/zorkdemo-backend.log"; \
-		exit 1; \
-	fi
+	uv run python -m backend.app.dev_runner ensure-backend \
+		--backend-url "$(BACKEND_URL)" \
+		--backend-host "$(BACKEND_HOST)" \
+		--backend-port "$(BACKEND_PORT)" \
+		--database-url "$(DATABASE_URL)" \
+		--cors-allow-origins "$(CORS_ALLOW_ORIGINS)" \
+		--backend-log "$(BACKEND_LOG)"
 
 run: ensure-backend
-	if command -v xdg-open >/dev/null 2>&1; then \
-		xdg-open "$(FRONTEND_URL)" >/dev/null 2>&1 & \
-	elif command -v wslview >/dev/null 2>&1; then \
-		wslview "$(FRONTEND_URL)" >/dev/null 2>&1 & \
-	elif command -v open >/dev/null 2>&1; then \
-		open "$(FRONTEND_URL)" >/dev/null 2>&1 & \
-	else \
-		echo "Open $(FRONTEND_URL) in your browser."; \
-	fi
-	cd frontend && VITE_API_BASE_URL="$(BACKEND_URL)" npm run dev -- --host $(FRONTEND_HOST) --port $(FRONTEND_PORT)
+	uv run python -m backend.app.dev_runner open-browser --frontend-url "$(FRONTEND_URL)"
+	uv run python -m backend.app.dev_runner run-frontend \
+		--frontend-dir frontend \
+		--api-base-url "$(BACKEND_URL)" \
+		--frontend-host "$(FRONTEND_HOST)" \
+		--frontend-port "$(FRONTEND_PORT)"
 
 lint:
 	uv run ruff check .

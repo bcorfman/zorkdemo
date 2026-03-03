@@ -57,7 +57,15 @@ Key targets:
 - `make lint`: run `ruff check`
 - `make format`: run `ruff format`
 - `make test`: run Python + frontend tests
-- `make run`: ensure local backend is up, launch frontend dev server, and open browser
+- `make run`: ensure local backend is up, launch frontend dev server, and open browser (Linux/macOS/Windows)
+
+`make run` uses `uv run python -m backend.app.dev_runner` for cross-platform process startup, health checks, and browser opening.
+
+Optional `make run` variables:
+
+- `BACKEND_HOST`, `BACKEND_PORT`, `FRONTEND_HOST`, `FRONTEND_PORT`
+- `DATABASE_URL`, `CORS_ALLOW_ORIGINS`
+- `BACKEND_LOG` (default: `.tmp/zorkdemo-backend.log`)
 
 ## Deployment (Phase 4)
 
@@ -116,45 +124,3 @@ npm run dev
 ```
 
 Navigate to [http://localhost:5173/](http://localhost:5173/)
-
-## Legacy Hug Notes
-
-The easiest option is to create a `.env` file in the root of the project with the contents:
-
-```config
-SECRET_KEY="<some random key>"
-```
-
-Alternatively, you can manually set your environment variables for your terminal session, but you'll have to remember to do that for every new session.
-
-```sh
-export SECRET_KEY="<put something random here>"
-```
-
-### Running the legacy development web server
-
-In the root of the project, run:
-
-```sh
-uv run hug -m web.app
-```
-
-Navigate in your browser to:
-
-[http://localhost:8000/](http://localhost:8000/)
-
-Have fun!
-
-If you want to restart delete your `sid` cookie from your browser and refresh the page.
-
-**NOTE:** future versions should provide a link to an endpoint to achieve something like this.
-
-Or, you could delete your session record from the Sqlite database.
-
-## Web TODO Items
-
-- make endsession actually work
-- provide link to endsession
-- alignment between input and output for seamless experience
-- figure out how to handle quit/exit
-- wsgi file for hooking this up to a real web server and hosting

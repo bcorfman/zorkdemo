@@ -1,4 +1,0 @@
-adventure
-backend
-web
-zorkdemo
