@@ -24,9 +24,7 @@ class MarkdownPassthru:
     def transform(self, text: str) -> str:
         new_lines = []
         for line in text.split("\n"):
-            new_lines.append(
-                line.strip()
-            )  # md freaks out about leading/trailing spaces!
+            new_lines.append(line.strip())  # md freaks out about leading/trailing spaces!
         return "\n".join(new_lines)
 
 

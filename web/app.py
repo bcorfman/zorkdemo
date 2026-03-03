@@ -13,11 +13,7 @@ from .utils import markdown2html
 
 html = hug.get(output=hug.output_format.html)
 api = hug.API(__name__)
-api.http.add_middleware(
-    hug.middleware.SessionMiddleware(
-        AdventureSessionStore(), cookie_secure=False, cookie_http_only=False
-    )
-)
+api.http.add_middleware(hug.middleware.SessionMiddleware(AdventureSessionStore(), cookie_secure=False, cookie_http_only=False))
 init_db(settings.DATABASE_URL)
 
 
@@ -32,9 +28,7 @@ def index(session: hug.directives.session):
     """main index / page"""
     starting_text = ""
     if not session:
-        starting_text = markdown2html(
-            Adventure(output_strategy=MarkdownPassthru()).current_room.description
-        )
+        starting_text = markdown2html(Adventure(output_strategy=MarkdownPassthru()).current_room.description)
     else:
         starting_text = f"Resuming (session: {session.get('session_id')})"
     return get_template("index.html").render(session_id="", starting_text=starting_text)

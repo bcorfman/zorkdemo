@@ -1,6 +1,7 @@
 """
 template loading helper
 """
+
 from jinja2 import FileSystemLoader, Environment
 
 

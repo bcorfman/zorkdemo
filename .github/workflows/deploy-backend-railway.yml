@@ -1,0 +1,33 @@
+name: Deploy Backend to Railway
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "adventure/**"
+      - "backend/**"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/deploy-backend-railway.yml"
+      - "railway.toml"
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Deploy to Railway
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+          RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE }}
+        run: railway up --service "$RAILWAY_SERVICE" --detach
+
+      - name: Health check
+        if: ${{ vars.BACKEND_HEALTHCHECK_URL != '' }}
+        run: curl -fsS "${{ vars.BACKEND_HEALTHCHECK_URL }}"

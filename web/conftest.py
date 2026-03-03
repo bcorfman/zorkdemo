@@ -1,4 +1,5 @@
-""" PyTest Configuration """
+"""PyTest Configuration"""
+
 import os
 import pytest
 from .models import create_tables, drop_tables

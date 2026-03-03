@@ -88,10 +88,7 @@ def test_execute_command_loads_and_saves_state():
 
     assert adventure.loaded == b"prior-save"
     assert result["output_html"] == "<p>**Echo** look around</p>"
-    assert (
-        repo.sessions[session_id]["save_data"]
-        == base64.b64encode(b"next-save").decode("ascii")
-    )
+    assert repo.sessions[session_id]["save_data"] == base64.b64encode(b"next-save").decode("ascii")
 
 
 def test_execute_command_rejects_empty_input():

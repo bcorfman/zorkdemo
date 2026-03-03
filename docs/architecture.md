@@ -15,6 +15,13 @@
 - Backend persists session save blobs in Postgres via SQLAlchemy repository.
 - Schema migrations are managed with Alembic (`backend/alembic`).
 
+## Deployment Topology (Phase 4)
+
+- Frontend deploy workflow: `.github/workflows/deploy-frontend-pages.yml`
+- Backend deploy workflow: `.github/workflows/deploy-backend-railway.yml`
+- Railway service config: `railway.toml`
+- Backend health check: `/api/v1/health`
+
 ## Backend API (Phase 1)
 
 - `GET /api/v1/health`

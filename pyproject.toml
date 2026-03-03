@@ -24,12 +24,11 @@ dependencies = [
 [dependency-groups]
 dev = [
     "coverage>=7.0.1,<8",
-    "flake8>=6.0.0,<8",
     "httpx>=0.28.0,<1",
     "ipython>=8.7.0,<9",
     "pyinstaller>=6.0.0,<7",
     "pytest>=7.2.0,<10",
-    "yapf>=0.32.0,<1",
+    "ruff>=0.11.0,<1",
 ]
 
 [tool.setuptools]
@@ -41,6 +40,16 @@ include = ["adventure*", "backend*", "web*"]
 
 [tool.uv]
 default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 127
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F"]
+
+[tool.ruff.format]
+quote-style = "double"
 
 [build-system]
 requires = ["setuptools>=69", "wheel"]
