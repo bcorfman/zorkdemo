@@ -5,7 +5,6 @@
 - `adventure/`: existing game engine logic (shared by backend during MVP).
 - `backend/`: FastAPI service for API and session persistence.
 - `frontend/`: TypeScript browser client (GitHub Pages).
-- `web/`: legacy Hug implementation (to be retired after migration).
 - `.plans/`: migration plans and checklists.
 
 ## Runtime Topology

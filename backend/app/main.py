@@ -5,11 +5,11 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from adventure.app import Adventure
 from adventure.output import MarkdownPassthru
-from web.utils import markdown2html
 
 from .api import create_api_router
 from .db import create_session_factory, initialize_database
 from .repository import PostgresSessionRepository
+from .rendering import markdown_to_html
 from .service import AdventureService
 from .settings import Settings, settings as default_settings
 
@@ -35,7 +35,7 @@ def create_app(
         service = AdventureService(
             repository=repository,
             adventure_factory=_create_adventure,
-            markdown_renderer=markdown2html,
+            markdown_renderer=markdown_to_html,
         )
 
     app = FastAPI(title="zorkdemo backend", version="1.0.0")
