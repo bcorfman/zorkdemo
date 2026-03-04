@@ -2,7 +2,7 @@
 
 ## Development Workflow
 
-This repository is in a staged migration from Hug to FastAPI + TypeScript frontend.
+This repository runs a FastAPI backend with a TypeScript frontend.
 
 ### Prerequisites
 
@@ -34,12 +34,6 @@ uv run alembic -c backend/alembic.ini upgrade head
 - Railway backend deploy workflow:
   - secret: `RAILWAY_TOKEN`
   - variables: `RAILWAY_SERVICE`, optional `BACKEND_HEALTHCHECK_URL`
-
-### Current runnable app (legacy Hug)
-
-```sh
-uv run hug -m web.app
-```
 
 ### Frontend (Phase 3)
 

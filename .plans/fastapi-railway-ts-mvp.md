@@ -9,7 +9,7 @@
 - [ ] Frontend stack: `Vite + React + TypeScript`
 - [ ] Session model: anonymous UUID stored in browser `localStorage`
 - [ ] Session persistence: Railway Postgres
-- [ ] API transition: clean API now under `/api/v1/*` (no Hug compatibility paths)
+- [ ] API transition: clean API now under `/api/v1/*` (no legacy compatibility paths)
 
 ## [ ] Public API / Interface Changes
 
@@ -48,7 +48,7 @@
 
 ### [x] Exit Criteria
 - [x] Manual API flow works end-to-end
-- [x] Command response parity with current Hug behavior
+- [x] Command response parity with prior behavior
 
 ## [x] Phase 2: Postgres Persistence (Day 2)
 - [x] Add SQLAlchemy 2.0 + Alembic in backend

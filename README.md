@@ -31,7 +31,6 @@ NOTE: the MacOS version does not have code signing built into it yet (that's nex
 - `adventure/`: shared game engine logic
 - `backend/`: FastAPI service (SQLAlchemy + Alembic, target Railway deploy)
 - `frontend/`: TypeScript frontend app (target GitHub Pages deploy)
-- `web/`: current legacy Hug web app
 - `docs/architecture.md`: migration architecture notes
 
 ## Local Development Quickstart
@@ -106,14 +105,6 @@ API endpoints:
 - `POST /api/v1/session`
 - `POST /api/v1/command`
 - `POST /api/v1/session/reset`
-
-### Run Backend (Legacy Hug App)
-
-```sh
-uv run hug -m web.app
-```
-
-Navigate to [http://localhost:8000/](http://localhost:8000/)
 
 ### Run Frontend (TypeScript App)
 
