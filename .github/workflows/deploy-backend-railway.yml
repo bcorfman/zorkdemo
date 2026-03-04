@@ -20,7 +20,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Railway CLI
-        run: npm install -g @railway/cli
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm config set fetch-retries 5
+          npm config set fetch-retry-mintimeout 20000
+          npm config set fetch-retry-maxtimeout 120000
+
+          for attempt in 1 2 3; do
+            if npm install -g @railway/cli; then
+              railway --version
+              exit 0
+            fi
+
+            if [ "$attempt" -eq 3 ]; then
+              echo "Railway CLI install failed after $attempt attempts"
+              exit 1
+            fi
+
+            sleep $((attempt * 15))
+          done
 
       - name: Deploy to Railway
         env:
