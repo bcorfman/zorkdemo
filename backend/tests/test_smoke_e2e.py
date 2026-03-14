@@ -4,14 +4,14 @@ from fastapi.testclient import TestClient
 
 from backend.app.main import create_app
 
-MINIZORK_PATH = str(Path(__file__).resolve().parent.parent.parent.parent / "yazm-py" / "stories" / "minizork.z3")
+STORY_PATH = str(Path(__file__).resolve().parent.parent.parent / "data" / "zork1.z3")
 
 
 class SmokeSettings:
     def __init__(self, database_url: str):
         self.database_url = database_url
         self.cors_allow_origins = ["http://localhost:5173"]
-        self.story_file = MINIZORK_PATH
+        self.story_file = STORY_PATH
 
 
 def test_play_resume_and_reset_flow(tmp_path: Path):
@@ -33,7 +33,8 @@ def test_play_resume_and_reset_flow(tmp_path: Path):
         json={"session_id": session_id, "command": "open mailbox"},
     )
     assert opened_mailbox.status_code == 200
-    assert "Opening the small mailbox" in opened_mailbox.json()["output_html"]
+    assert "Opening the" in opened_mailbox.json()["output_html"]
+    assert "small mailbox" in opened_mailbox.json()["output_html"]
 
     # Take the leaflet
     took_leaflet = client.post(

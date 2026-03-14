@@ -15,7 +15,7 @@ dependencies = [
     "rich>=13.0.0,<15",
     "SQLAlchemy>=2.0.35,<3",
     "uvicorn>=0.32.0,<1",
-    "yazm-py",
+    "yazm-py>=0.1.0,<1",
 ]
 
 [dependency-groups]
@@ -37,9 +37,6 @@ include = ["adventure*", "backend*"]
 
 [tool.uv]
 default-groups = ["dev"]
-
-[tool.uv.sources]
-yazm-py = { path = "../yazm-py", editable = true }
 
 [tool.ruff]
 line-length = 127
