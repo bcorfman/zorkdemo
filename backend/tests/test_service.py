@@ -33,6 +33,9 @@ class FakeAdventure:
     def __init__(self):
         self.loaded = b""
 
+    def get_intro(self):
+        return "Welcome to the game"
+
     def execute(self, tokens):
         return f"**Echo** {' '.join(tokens)}"
 
@@ -56,6 +59,7 @@ def test_create_session_generates_uuid_when_missing():
     parsed = uuid.UUID(result["session_id"])
     assert str(parsed) == result["session_id"]
     assert result["created"] is True
+    assert result["intro_html"] == "Welcome to the game"
 
 
 def test_create_session_with_existing_id_is_idempotent():
@@ -69,7 +73,9 @@ def test_create_session_with_existing_id_is_idempotent():
     first = service.create_session("fixed-id")
     second = service.create_session("fixed-id")
 
-    assert first == {"session_id": "fixed-id", "created": True}
+    assert first["session_id"] == "fixed-id"
+    assert first["created"] is True
+    assert first["intro_html"] == "Welcome to the game"
     assert second == {"session_id": "fixed-id", "created": False}
 
 

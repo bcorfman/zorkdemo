@@ -16,6 +16,7 @@ class Settings:
                 default=("http://localhost:5173,http://127.0.0.1:5173,http://localhost:8000,https://bcorfman.github.io"),
             )
         )
+        self.story_file = env.str("STORY_FILE", default="")
 
     @staticmethod
     def _parse_origins(raw_origins: str) -> list[str]:

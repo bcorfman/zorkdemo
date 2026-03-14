@@ -78,6 +78,16 @@ body {
   background: #fef9c3;
 }
 
+span.object {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+span.location {
+  color: #0369a1;
+  font-weight: 600;
+}
+
 .controls {
   display: flex;
   gap: 0.5rem;

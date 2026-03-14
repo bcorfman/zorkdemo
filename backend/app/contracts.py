@@ -19,6 +19,9 @@ class SessionRepository(Protocol):
 
 
 class AdventureInstance(Protocol):
+    def get_intro(self) -> str:
+        """Run the game to the first input prompt and return intro text."""
+
     def execute(self, tokens: list[str]) -> str:
         """Run the parsed command tokens and return markdown output."""
 

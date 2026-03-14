@@ -2,7 +2,7 @@ PACKAGE := zorkdemo
 PACKAGE_DIR := .
 .SILENT: setup install devinstall test run lint format all ensure-backend
 
-PYTHON_VERSION ?= 3.10
+PYTHON_VERSION ?= 3.12
 BACKEND_HOST ?= 127.0.0.1
 BACKEND_PORT ?= 8000
 FRONTEND_HOST ?= 127.0.0.1

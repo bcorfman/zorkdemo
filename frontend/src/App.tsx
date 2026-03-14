@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import { createSession, resetSession, runCommand } from "./lib/api";
 import { TranscriptEntry } from "./lib/types";
@@ -17,6 +17,17 @@ export default function App() {
   const [status, setStatus] = useState<string>("Connecting...");
   const [error, setError] = useState<string>("");
   const [busy, setBusy] = useState<boolean>(false);
+  const transcriptRef = useRef<HTMLElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (transcriptRef.current) {
+      transcriptRef.current.scrollTop = transcriptRef.current.scrollHeight;
+    }
+    if (!busy && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [transcript, busy]);
 
   const canSubmit = useMemo(
     () => command.trim().length > 0 && sessionId.length > 0 && !busy,
@@ -37,6 +48,16 @@ export default function App() {
         }
         setSessionId(response.session_id);
         localStorage.setItem(SESSION_STORAGE_KEY, response.session_id);
+        if (response.created && response.intro_html) {
+          setTranscript([
+            {
+              id: generateEntryId(),
+              kind: "output",
+              text: response.intro_html,
+              isHtml: true
+            }
+          ]);
+        }
         setStatus(
           response.created
             ? `Session: ${response.session_id} (new)`
@@ -136,7 +157,7 @@ export default function App() {
 
         {error && <div className="error">{error}</div>}
 
-        <section className="transcript" aria-label="Transcript">
+        <section className="transcript" aria-label="Transcript" ref={transcriptRef}>
           {transcript.length === 0 ? (
             <p className="line line-system">Type a command like "look" to begin.</p>
           ) : (
@@ -163,6 +184,7 @@ export default function App() {
           <input
             id="command-input"
             name="command"
+            ref={inputRef}
             value={command}
             onChange={(event) => setCommand(event.target.value)}
             placeholder="Enter command"
