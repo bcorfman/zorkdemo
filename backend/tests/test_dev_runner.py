@@ -23,8 +23,11 @@ def test_healthcheck_url_normalizes_trailing_slash():
     assert dev_runner.healthcheck_url("http://127.0.0.1:8000/") == "http://127.0.0.1:8000/api/v1/health"
 
 
-def test_ensure_backend_running_is_noop_when_healthy():
+def test_ensure_backend_running_restarts_when_healthy(monkeypatch):
     runner = FakeCommandExecutor()
+    killed_ports = []
+    monkeypatch.setattr(dev_runner, "_kill_process_on_port", lambda port: killed_ports.append(port))
+    health_states = iter([True, False, True])
 
     started = dev_runner.ensure_backend_running(
         backend_url="http://127.0.0.1:8000",
@@ -34,16 +37,17 @@ def test_ensure_backend_running_is_noop_when_healthy():
         cors_allow_origins="http://localhost:5173",
         backend_log=".tmp/backend.log",
         command_executor=runner,
-        is_backend_healthy=lambda _: True,
+        is_backend_healthy=lambda _: next(health_states),
         sleep_fn=lambda _: None,
         monotonic_fn=lambda: 0.0,
         startup_timeout_seconds=1.0,
         base_env={"PATH": "x"},
     )
 
-    assert started is False
-    assert runner.run_calls == []
-    assert runner.spawn_calls == []
+    assert started is True
+    assert killed_ports == [8000]
+    assert len(runner.run_calls) == 1
+    assert len(runner.spawn_calls) == 1
 
 
 def test_ensure_backend_running_runs_migration_and_server():

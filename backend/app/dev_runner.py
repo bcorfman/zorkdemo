@@ -59,6 +59,25 @@ def _with_backend_env(base_env: dict[str, str], database_url: str, cors_allow_or
     return env
 
 
+def _kill_process_on_port(port: int) -> None:
+    """Kill any process listening on the given port."""
+    import signal
+
+    try:
+        result = subprocess.run(
+            ["lsof", "-ti", f"tcp:{port}"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        pids = result.stdout.strip().split()
+        for pid in pids:
+            if pid:
+                os.kill(int(pid), signal.SIGTERM)
+    except (OSError, ValueError):
+        pass
+
+
 def ensure_backend_running(
     *,
     backend_url: str,
@@ -75,7 +94,8 @@ def ensure_backend_running(
     base_env: dict[str, str],
 ) -> bool:
     if is_backend_healthy(backend_url):
-        return False
+        _kill_process_on_port(backend_port)
+        sleep_fn(0.5)
 
     env = _with_backend_env(base_env, database_url, cors_allow_origins)
     migrate_args = ["uv", "run", "alembic", "-c", "backend/alembic.ini", "upgrade", "head"]
