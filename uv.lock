@@ -986,11 +986,11 @@ wheels = [
 
 [[package]]
 name = "yazm-py"
-version = "0.1.0"
+version = "0.2.0"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/fa/2d/c58381d8b69460681ad3b54bb5176e1eeb487629fbfc894ee2f2886ca74f/yazm_py-0.1.0.tar.gz", hash = "sha256:779fdd75d679361dc90e4124afdd70f318f594dd520f53b5c0d90f7edb3681f1", size = 44858, upload-time = "2026-03-14T20:52:44.826Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/cf/cc/496ccd26ee042fc0134ed4a2013ca80d653dc63fe84347d65c0f1185e1da/yazm_py-0.2.0.tar.gz", hash = "sha256:c1fddfe99d3ecc76b1f8fe0ac82f354b31d6e467ab5de685701330c757cff1bd", size = 44277, upload-time = "2026-03-14T21:13:03.925Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/48/de/c394e7633e0648efdaef13e1468d31f0c4422793b1618b0bb5b84a3942b8/yazm_py-0.1.0-py3-none-any.whl", hash = "sha256:2ff9974905a0b816176779891cf02b60d2ddfb0d198ed3ca0daa32c9093d0df9", size = 30208, upload-time = "2026-03-14T20:52:43.592Z" },
+    { url = "https://files.pythonhosted.org/packages/40/f9/4cbb7d5ec84c7081f96b0f5645706a772deabca3f12c511436f304f9e23b/yazm_py-0.2.0-py3-none-any.whl", hash = "sha256:011b173900bca4397b78b4a65874dfd34cb6523827fd9691784715cbecbe814d", size = 30214, upload-time = "2026-03-14T21:13:02.784Z" },
 ]
 
 [[package]]
