@@ -2,7 +2,8 @@ import { z } from "zod";
 
 export const SessionCreateResponseSchema = z.object({
   session_id: z.string(),
-  created: z.boolean()
+  created: z.boolean(),
+  intro_html: z.string().default("")
 });
 
 export const CommandResponseSchema = z.object({

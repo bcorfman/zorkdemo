@@ -20,7 +20,14 @@ class AdventureService:
     def create_session(self, session_id: str | None) -> dict[str, str | bool]:
         resolved_session_id = session_id or str(uuid4())
         _, created = self._repository.get_or_create(resolved_session_id)
-        return {"session_id": resolved_session_id, "created": created}
+        result: dict[str, str | bool] = {"session_id": resolved_session_id, "created": created}
+        if created:
+            adventure = self._adventure_factory()
+            intro_markdown = adventure.get_intro()
+            result["intro_html"] = self._markdown_renderer(intro_markdown)
+            next_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
+            self._repository.set_save_data(resolved_session_id, next_save_data)
+        return result
 
     def execute_command(self, session_id: str, command: str) -> dict[str, str]:
         cleaned_command = command.strip()

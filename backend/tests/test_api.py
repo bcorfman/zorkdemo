@@ -5,7 +5,7 @@ from backend.app.main import create_app
 
 class FakeService:
     def create_session(self, session_id):
-        return {"session_id": session_id or "generated-session", "created": True}
+        return {"session_id": session_id or "generated-session", "created": True, "intro_html": "<p>Welcome</p>"}
 
     def execute_command(self, session_id, command):
         return {
@@ -36,7 +36,7 @@ def test_create_session_endpoint():
     response = client.post("/api/v1/session", json={})
 
     assert response.status_code == 200
-    assert response.json() == {"session_id": "generated-session", "created": True}
+    assert response.json() == {"session_id": "generated-session", "created": True, "intro_html": "<p>Welcome</p>"}
 
 
 def test_command_endpoint():

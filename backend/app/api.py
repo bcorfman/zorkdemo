@@ -17,6 +17,7 @@ class SessionCreateRequest(BaseModel):
 class SessionCreateResponse(BaseModel):
     session_id: str
     created: bool
+    intro_html: str = ""
 
 
 class CommandRequest(BaseModel):

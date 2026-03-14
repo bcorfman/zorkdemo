@@ -5,7 +5,7 @@ description = "A (much simplified) port of a famous adventure game to help teach
 authors = [{ name = "Brandon Corfman", email = "bcorfman@fastmail.fm" }]
 license = { text = "MIT" }
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.15.0,<2",
     "environs>=9.5.0,<15",
@@ -15,6 +15,7 @@ dependencies = [
     "rich>=13.0.0,<15",
     "SQLAlchemy>=2.0.35,<3",
     "uvicorn>=0.32.0,<1",
+    "yazm-py",
 ]
 
 [dependency-groups]
@@ -37,9 +38,12 @@ include = ["adventure*", "backend*"]
 [tool.uv]
 default-groups = ["dev"]
 
+[tool.uv.sources]
+yazm-py = { path = "../yazm-py", editable = true }
+
 [tool.ruff]
 line-length = 127
-target-version = "py310"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F"]
