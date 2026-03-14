@@ -27,6 +27,7 @@ def _load_story_data(settings: Settings) -> bytes:
 def _make_adventure_factory(story_data: bytes):
     def factory() -> ZorkWebAdapter:
         return ZorkWebAdapter(story_data)
+
     return factory
 
 
