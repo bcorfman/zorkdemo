@@ -71,6 +71,39 @@ describe("App", () => {
     );
   });
 
+  it("does not duplicate the initial room text for first look command", async () => {
+    const introHtml = [
+      "<p>ZORK I: The Great Underground Empire</p>",
+      "<p><span class='location'>West of House</span><br />Room text.</p>"
+    ].join("");
+
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ session_id: "session-123", created: true, intro_html: introHtml })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "look",
+          output_html: "<p><span class='location'>West of House</span><br />Room text.</p>",
+          updated_at: "2026-03-02T00:00:01"
+        })
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/Session: session-123/i);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText(/Command/i), "look");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+
+    await waitFor(() => {
+      expect(screen.getAllByText("West of House")).toHaveLength(1);
+    });
+  });
+
   it("uses existing local session id and marks session as resumed", async () => {
     window.localStorage.setItem("zorkdemo_session_id", "existing-session");
     const fetchMock = vi

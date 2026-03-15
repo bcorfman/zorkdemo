@@ -23,7 +23,7 @@ class AdventureService:
         result: dict[str, str | bool] = {"session_id": resolved_session_id, "created": created}
         if created:
             adventure = self._adventure_factory()
-            intro_markdown = _collapse_immediately_repeated_intro_block(adventure.get_intro())
+            intro_markdown = _normalize_intro_text(adventure.get_intro())
             result["intro_html"] = self._markdown_renderer(intro_markdown)
             next_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
             self._repository.set_save_data(resolved_session_id, next_save_data)
@@ -40,7 +40,7 @@ class AdventureService:
         if existing_save_data:
             adventure.admin_load(base64.b64decode(existing_save_data.encode("ascii")))
 
-        output_markdown = adventure.execute(cleaned_command.split())
+        output_markdown = _strip_prompt_markers(adventure.execute(cleaned_command.split()))
         output_html = self._markdown_renderer(output_markdown)
         next_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
         updated_session = self._repository.set_save_data(session_id, next_save_data)
@@ -70,3 +70,23 @@ def _collapse_immediately_repeated_intro_block(intro_text: str) -> str:
         paragraphs.pop()
 
     return "\n\n".join(paragraphs)
+
+
+def _strip_prompt_markers(output_text: str) -> str:
+    lines = output_text.splitlines()
+    normalized_lines: list[str] = []
+    for line in lines:
+        stripped = line.strip()
+        if stripped == ">":
+            continue
+        if line.lstrip().startswith(">"):
+            first_prompt = line.find(">")
+            line = line[first_prompt + 1 :].lstrip()
+            if not line:
+                continue
+        normalized_lines.append(line)
+    return "\n".join(normalized_lines).strip()
+
+
+def _normalize_intro_text(intro_text: str) -> str:
+    return _strip_prompt_markers(_collapse_immediately_repeated_intro_block(intro_text))

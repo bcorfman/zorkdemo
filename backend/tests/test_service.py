@@ -150,3 +150,21 @@ def test_create_session_collapses_duplicate_intro_room_block():
 
     assert result["created"] is True
     assert result["intro_html"].count("West of House") == 1
+    assert ">" not in result["intro_html"]
+
+
+def test_execute_command_strips_prompt_markers():
+    class PromptAdventure(FakeAdventure):
+        def execute(self, tokens):
+            return "> West of House\nThere is a small mailbox here.\n\n>"
+
+    repo = InMemorySessionRepository()
+    service = AdventureService(
+        repository=repo,
+        adventure_factory=PromptAdventure,
+        markdown_renderer=lambda text: text,
+    )
+
+    result = service.execute_command(session_id="session-1", command="look")
+
+    assert result["output_html"] == "West of House\nThere is a small mailbox here."
