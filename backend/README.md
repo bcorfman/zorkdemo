@@ -39,4 +39,4 @@ uv run alembic -c backend/alembic.ini upgrade head
 - `GET /api/v1/health`
 - `POST /api/v1/session` (returns `intro_html` for new sessions; duplicate trailing intro blocks are normalized)
 - `POST /api/v1/command`
-- `POST /api/v1/session/reset`
+- `POST /api/v1/session/reset` (resets to initial game state and returns fresh `intro_html`)

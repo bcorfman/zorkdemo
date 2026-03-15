@@ -53,8 +53,12 @@ class AdventureService:
         }
 
     def reset_session(self, session_id: str) -> dict[str, str | bool]:
-        self._repository.set_save_data(session_id, "")
-        return {"session_id": session_id, "reset": True}
+        adventure = self._adventure_factory()
+        intro_markdown = _normalize_intro_text(adventure.get_intro())
+        intro_html = self._markdown_renderer(intro_markdown)
+        next_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
+        self._repository.set_save_data(session_id, next_save_data)
+        return {"session_id": session_id, "reset": True, "intro_html": intro_html}
 
 
 def _collapse_immediately_repeated_intro_block(intro_text: str) -> str:

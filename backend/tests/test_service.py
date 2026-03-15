@@ -122,7 +122,7 @@ def test_execute_command_rejects_empty_input():
         service.execute_command(session_id="session-1", command="   ")
 
 
-def test_reset_session_clears_saved_data():
+def test_reset_session_reseeds_state_and_returns_intro():
     repo = InMemorySessionRepository()
     session_id = "session-reset"
     repo.set_save_data(session_id, base64.b64encode(b"old").decode("ascii"))
@@ -135,7 +135,8 @@ def test_reset_session_clears_saved_data():
     result = service.reset_session(session_id)
 
     assert result["reset"] is True
-    assert repo.sessions[session_id]["save_data"] == ""
+    assert result["intro_html"] == "Welcome to the game"
+    assert repo.sessions[session_id]["save_data"] == base64.b64encode(b"next-save").decode("ascii")
 
 
 def test_create_session_collapses_duplicate_intro_room_block():

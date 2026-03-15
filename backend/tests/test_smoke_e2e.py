@@ -60,7 +60,9 @@ def test_play_resume_and_reset_flow(tmp_path: Path):
     # Reset session
     reset_result = client.post("/api/v1/session/reset", json={"session_id": session_id})
     assert reset_result.status_code == 200
-    assert reset_result.json() == {"session_id": session_id, "reset": True}
+    assert reset_result.json()["session_id"] == session_id
+    assert reset_result.json()["reset"] is True
+    assert "West of House" in reset_result.json()["intro_html"]
 
     # After reset, inventory should be empty
     inventory_after_reset = client.post(
