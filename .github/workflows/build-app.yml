@@ -10,6 +10,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ github.token }}
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   create_release:
@@ -45,7 +46,7 @@ jobs:
             x86_64: ./dist/zorkdemo.exe
             name: exe
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v6
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
