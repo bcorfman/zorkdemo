@@ -27,8 +27,7 @@ def _resolve_story_path(settings: Settings) -> Path:
 
     if configured_path:
         raise FileNotFoundError(
-            f"Story file not found: {configured_path}. "
-            f"Set STORY_FILE to a valid path or place zork1.z3 in data/."
+            f"Story file not found: {configured_path}. Set STORY_FILE to a valid path or place zork1.z3 in data/."
         )
 
     raise FileNotFoundError(f"Default story file not found: {_DEFAULT_STORY_PATH}. Place zork1.z3 in data/.")
