@@ -39,6 +39,7 @@ class SessionResetRequest(BaseModel):
 class SessionResetResponse(BaseModel):
     session_id: str
     reset: bool
+    intro_html: str = ""
 
 
 def create_api_router(service: AdventureService) -> APIRouter:

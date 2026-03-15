@@ -140,7 +140,7 @@ describe("App", () => {
         })
       )
       .mockResolvedValueOnce(
-        jsonResponse({ session_id: "session-123", reset: true })
+        jsonResponse({ session_id: "session-123", reset: true, intro_html: "" })
       );
     vi.stubGlobal("fetch", fetchMock);
 
@@ -162,5 +162,30 @@ describe("App", () => {
       "http://localhost:8000/api/v1/session/reset",
       expect.objectContaining({ method: "POST" })
     );
+  });
+
+  it("shows intro text immediately after reset", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ session_id: "session-123", created: true, intro_html: "<p>Old intro</p>" })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          reset: true,
+          intro_html: "<p><span class='location'>West of House</span><br />Room text.</p>"
+        })
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/Session: session-123/i);
+
+    const user = userEvent.setup();
+    await user.click(screen.getByRole("button", { name: /Reset Session/i }));
+
+    await screen.findByText("West of House");
+    expect(screen.getByText("Room text.")).toBeInTheDocument();
   });
 });

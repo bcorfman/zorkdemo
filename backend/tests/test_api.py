@@ -16,7 +16,7 @@ class FakeService:
         }
 
     def reset_session(self, session_id):
-        return {"session_id": session_id, "reset": True}
+        return {"session_id": session_id, "reset": True, "intro_html": "<p>Welcome back</p>"}
 
 
 def test_health_check():
@@ -64,4 +64,4 @@ def test_reset_endpoint():
     response = client.post("/api/v1/session/reset", json={"session_id": "abc123"})
 
     assert response.status_code == 200
-    assert response.json() == {"session_id": "abc123", "reset": True}
+    assert response.json() == {"session_id": "abc123", "reset": True, "intro_html": "<p>Welcome back</p>"}

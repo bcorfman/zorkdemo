@@ -15,7 +15,8 @@ export const CommandResponseSchema = z.object({
 
 export const SessionResetResponseSchema = z.object({
   session_id: z.string(),
-  reset: z.boolean()
+  reset: z.boolean(),
+  intro_html: z.string().default("")
 });
 
 export type SessionCreateResponse = z.infer<typeof SessionCreateResponseSchema>;

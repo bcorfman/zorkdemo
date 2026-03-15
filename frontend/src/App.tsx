@@ -177,7 +177,17 @@ export default function App() {
     setError("");
     try {
       const response = await resetSession(sessionId);
-      setTranscript([]);
+      if (response.intro_html) {
+        const introEntry: TranscriptEntry = {
+          id: generateEntryId(),
+          kind: "output",
+          text: response.intro_html,
+          isHtml: true
+        };
+        setTranscript([introEntry]);
+      } else {
+        setTranscript([]);
+      }
       setStatus(`Session: ${response.session_id} (reset)`);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to reset session";
