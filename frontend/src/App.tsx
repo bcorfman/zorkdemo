@@ -10,6 +10,44 @@ function generateEntryId(): string {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function htmlToNormalizedText(html: string): string {
+  const container = document.createElement("div");
+  container.innerHTML = html;
+  return (container.textContent ?? "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function isRedundantInitialLook(
+  cleanedCommand: string,
+  previousEntries: TranscriptEntry[],
+  outputHtml: string
+): boolean {
+  if (cleanedCommand.toLowerCase() !== "look") {
+    return false;
+  }
+  if (previousEntries.length !== 2) {
+    return false;
+  }
+  const [introEntry, inputEntry] = previousEntries;
+  if (
+    introEntry.kind !== "output" ||
+    !introEntry.isHtml ||
+    inputEntry.kind !== "input" ||
+    inputEntry.text.trim().toLowerCase() !== "look"
+  ) {
+    return false;
+  }
+
+  const introText = htmlToNormalizedText(introEntry.text);
+  const outputText = htmlToNormalizedText(outputHtml);
+  if (!outputText) {
+    return false;
+  }
+  return introText.endsWith(outputText);
+}
+
 export default function App() {
   const [sessionId, setSessionId] = useState<string>("");
   const [command, setCommand] = useState<string>("");
@@ -105,13 +143,17 @@ export default function App() {
     try {
       const response = await runCommand(sessionId, cleanedCommand);
       setTranscript((prev) => [
-        ...prev,
-        {
-          id: generateEntryId(),
-          kind: "output",
-          text: response.output_html,
-          isHtml: true
-        }
+        ...(isRedundantInitialLook(cleanedCommand, prev, response.output_html)
+          ? prev
+          : (() => {
+              const outputEntry: TranscriptEntry = {
+                id: generateEntryId(),
+                kind: "output",
+                text: response.output_html,
+                isHtml: true
+              };
+              return [...prev, outputEntry];
+            })())
       ]);
       setStatus(`Session: ${response.session_id}`);
     } catch (err) {
