@@ -17,11 +17,24 @@ from .settings import Settings, settings as default_settings
 _DEFAULT_STORY_PATH = Path(__file__).resolve().parent.parent.parent / "data" / "zork1.z3"
 
 
+def _resolve_story_path(settings: Settings) -> Path:
+    configured_path = Path(settings.story_file) if settings.story_file else None
+    if configured_path and configured_path.exists():
+        return configured_path
+
+    if _DEFAULT_STORY_PATH.exists():
+        return _DEFAULT_STORY_PATH
+
+    if configured_path:
+        raise FileNotFoundError(
+            f"Story file not found: {configured_path}. Set STORY_FILE to a valid path or place zork1.z3 in data/."
+        )
+
+    raise FileNotFoundError(f"Default story file not found: {_DEFAULT_STORY_PATH}. Place zork1.z3 in data/.")
+
+
 def _load_story_data(settings: Settings) -> bytes:
-    path = Path(settings.story_file) if settings.story_file else _DEFAULT_STORY_PATH
-    if not path.exists():
-        raise FileNotFoundError(f"Story file not found: {path}. Set STORY_FILE env var or place zork1.z3 in data/.")
-    return path.read_bytes()
+    return _resolve_story_path(settings).read_bytes()
 
 
 def _make_adventure_factory(story_data: bytes):

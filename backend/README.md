@@ -10,6 +10,7 @@ Phase 2 complete. Session persistence now uses SQLAlchemy with Alembic migration
 
 - `DATABASE_URL`: Postgres connection string for session persistence.
 - `CORS_ALLOW_ORIGINS`: Comma-separated allowed origins (for example, GitHub Pages URL + localhost).
+- `STORY_FILE` (optional): absolute/relative path to a `.z3` story file. If missing or invalid, the backend falls back to `data/zork1.z3`.
 
 ## Run Command
 
@@ -30,6 +31,8 @@ uv run alembic -c backend/alembic.ini upgrade head
 - Required env vars:
   - `DATABASE_URL`
   - `CORS_ALLOW_ORIGINS` (include `https://bcorfman.github.io` for production frontend)
+- Optional env vars:
+  - `STORY_FILE` (custom Z-machine story path; invalid values fall back to bundled `data/zork1.z3`)
 
 ## API Endpoints
 
