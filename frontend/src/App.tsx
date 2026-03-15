@@ -145,15 +145,15 @@ export default function App() {
       setTranscript((prev) => [
         ...(isRedundantInitialLook(cleanedCommand, prev, response.output_html)
           ? prev
-          : [
-              ...prev,
-              {
+          : (() => {
+              const outputEntry: TranscriptEntry = {
                 id: generateEntryId(),
                 kind: "output",
                 text: response.output_html,
                 isHtml: true
-              }
-            ])
+              };
+              return [...prev, outputEntry];
+            })())
       ]);
       setStatus(`Session: ${response.session_id}`);
     } catch (err) {
