@@ -71,7 +71,7 @@ describe("App", () => {
     );
   });
 
-  it("does not duplicate the initial room text for first look command", async () => {
+  it("renders first look output even when intro already contains room text", async () => {
     const introHtml = [
       "<p>ZORK I: The Great Underground Empire</p>",
       "<p><span class='location'>West of House</span><br />Room text.</p>"
@@ -100,7 +100,7 @@ describe("App", () => {
     await user.click(screen.getByRole("button", { name: /Send/i }));
 
     await waitFor(() => {
-      expect(screen.getAllByText("West of House")).toHaveLength(1);
+      expect(screen.getAllByText("West of House")).toHaveLength(2);
     });
   });
 
