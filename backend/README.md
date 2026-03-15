@@ -37,6 +37,6 @@ uv run alembic -c backend/alembic.ini upgrade head
 ## API Endpoints
 
 - `GET /api/v1/health`
-- `POST /api/v1/session`
+- `POST /api/v1/session` (returns `intro_html` for new sessions; duplicate trailing intro blocks are normalized)
 - `POST /api/v1/command`
 - `POST /api/v1/session/reset`
