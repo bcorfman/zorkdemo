@@ -34,6 +34,7 @@
 
 - `DATABASE_URL`
 - `CORS_ALLOW_ORIGINS`
+- `STORY_FILE` (optional; if unset or invalid, backend falls back to `data/zork1.z3`)
 
 ## Persistence Notes (Phase 2)
 
