@@ -46,6 +46,19 @@ class FakeAdventure:
         self.loaded = input_bytes
 
 
+class FakeAdventureWithDuplicateIntro(FakeAdventure):
+    def get_intro(self):
+        return (
+            "ZORK I: The Great Underground Empire\n\n"
+            "West of House\n"
+            "You are standing in an open field west of a white house, with a boarded front door.\n"
+            "There is a small mailbox here.\n\n"
+            "West of House\n"
+            "You are standing in an open field west of a white house, with a boarded front door.\n"
+            "There is a small mailbox here."
+        )
+
+
 def test_create_session_generates_uuid_when_missing():
     repo = InMemorySessionRepository()
     service = AdventureService(
@@ -123,3 +136,17 @@ def test_reset_session_clears_saved_data():
 
     assert result["reset"] is True
     assert repo.sessions[session_id]["save_data"] == ""
+
+
+def test_create_session_collapses_duplicate_intro_room_block():
+    repo = InMemorySessionRepository()
+    service = AdventureService(
+        repository=repo,
+        adventure_factory=FakeAdventureWithDuplicateIntro,
+        markdown_renderer=lambda text: text,
+    )
+
+    result = service.create_session("fixed-id")
+
+    assert result["created"] is True
+    assert result["intro_html"].count("West of House") == 1

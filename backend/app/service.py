@@ -23,7 +23,7 @@ class AdventureService:
         result: dict[str, str | bool] = {"session_id": resolved_session_id, "created": created}
         if created:
             adventure = self._adventure_factory()
-            intro_markdown = adventure.get_intro()
+            intro_markdown = _collapse_immediately_repeated_intro_block(adventure.get_intro())
             result["intro_html"] = self._markdown_renderer(intro_markdown)
             next_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
             self._repository.set_save_data(resolved_session_id, next_save_data)
@@ -55,3 +55,18 @@ class AdventureService:
     def reset_session(self, session_id: str) -> dict[str, str | bool]:
         self._repository.set_save_data(session_id, "")
         return {"session_id": session_id, "reset": True}
+
+
+def _collapse_immediately_repeated_intro_block(intro_text: str) -> str:
+    stripped_intro = intro_text.strip()
+    if not stripped_intro:
+        return intro_text
+
+    paragraphs = [block.strip() for block in stripped_intro.split("\n\n") if block.strip()]
+    if len(paragraphs) < 2:
+        return intro_text
+
+    while len(paragraphs) >= 2 and paragraphs[-1] == paragraphs[-2]:
+        paragraphs.pop()
+
+    return "\n\n".join(paragraphs)
