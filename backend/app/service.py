@@ -168,10 +168,21 @@ class AdventureService:
     ) -> dict[str, str]:
         session_id = session["session_id"]
         if len(tokens) == 1:
+            slot_names = self._list_slot_names(slot_scope_id)
+            if not slot_names:
+                return self._command_response(
+                    session_id,
+                    cleaned_command,
+                    (
+                        "No saved slots yet.\n"
+                        "You can save a game by typing 'save [slot_name]' at the prompt."
+                    ),
+                    session["updated_at"],
+                )
             return self._command_response(
                 session_id,
                 cleaned_command,
-                _format_slot_listing(self._list_slot_names(slot_scope_id)),
+                _format_slot_listing(slot_names),
                 session["updated_at"],
             )
         if len(tokens) != 2:
