@@ -35,25 +35,26 @@ class AdventureService:
             self._repository.set_save_data(resolved_session_id, next_save_data)
         return result
 
-    def execute_command(self, session_id: str, command: str) -> dict[str, str]:
+    def execute_command(self, session_id: str, command: str, player_id: str | None = None) -> dict[str, str]:
         cleaned_command = command.strip()
         if not cleaned_command:
             raise ValueError("Command must not be empty")
 
         session, _ = self._repository.get_or_create(session_id)
+        slot_scope_id = player_id or session_id
         tokens = cleaned_command.split()
         command_name = tokens[0].lower()
 
         pending_action = session["pending_action"]
         if pending_action is not None:
-            return self._handle_pending_confirmation(session, cleaned_command)
+            return self._handle_pending_confirmation(session, cleaned_command, slot_scope_id)
 
         if command_name == "save":
-            return self._handle_save_command(session, cleaned_command, tokens)
+            return self._handle_save_command(session, cleaned_command, tokens, slot_scope_id)
         if command_name == "restore":
-            return self._handle_restore_command(session, cleaned_command, tokens)
+            return self._handle_restore_command(session, cleaned_command, tokens, slot_scope_id)
         if command_name == "reset":
-            return self._handle_reset_slots_command(session, cleaned_command, tokens)
+            return self._handle_reset_slots_command(session, cleaned_command, tokens, slot_scope_id)
 
         adventure = self._load_adventure_from_session(session)
         output_markdown = _strip_prompt_markers(adventure.execute(tokens))
@@ -76,7 +77,12 @@ class AdventureService:
         self._repository.set_save_data(session_id, next_save_data)
         return {"session_id": session_id, "reset": True, "intro_html": intro_html}
 
-    def _handle_pending_confirmation(self, session: SessionRow, cleaned_command: str) -> dict[str, str]:
+    def _handle_pending_confirmation(
+        self,
+        session: SessionRow,
+        cleaned_command: str,
+        slot_scope_id: str,
+    ) -> dict[str, str]:
         answer = cleaned_command.strip().lower()
         if answer == "n":
             pending_action = session["pending_action"]
@@ -103,7 +109,7 @@ class AdventureService:
         if pending_action == _ACTION_SAVE_OVERWRITE:
             adventure = self._load_adventure_from_session(session)
             slot_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
-            self._save_slot_repository.upsert_slot(session["session_id"], slot_name or "", slot_save_data)
+            self._save_slot_repository.upsert_slot(slot_scope_id, slot_name or "", slot_save_data)
             updated_session = self._repository.clear_pending_confirmation(session["session_id"])
             return self._command_response(
                 session["session_id"],
@@ -113,7 +119,7 @@ class AdventureService:
             )
 
         if pending_action == _ACTION_RESTORE_SLOT:
-            slot = self._save_slot_repository.get_slot(session["session_id"], slot_name or "")
+            slot = self._save_slot_repository.get_slot(slot_scope_id, slot_name or "")
             if slot is None:
                 updated_session = self._repository.clear_pending_confirmation(session["session_id"])
                 return self._command_response(
@@ -136,7 +142,7 @@ class AdventureService:
             )
 
         if pending_action == _ACTION_RESET_SLOTS:
-            self._save_slot_repository.delete_all_slots(session["session_id"])
+            self._save_slot_repository.delete_all_slots(slot_scope_id)
             updated_session = self._repository.clear_pending_confirmation(session["session_id"])
             return self._command_response(
                 session["session_id"],
@@ -153,20 +159,26 @@ class AdventureService:
             updated_session["updated_at"],
         )
 
-    def _handle_save_command(self, session: SessionRow, cleaned_command: str, tokens: list[str]) -> dict[str, str]:
+    def _handle_save_command(
+        self,
+        session: SessionRow,
+        cleaned_command: str,
+        tokens: list[str],
+        slot_scope_id: str,
+    ) -> dict[str, str]:
         session_id = session["session_id"]
         if len(tokens) == 1:
             return self._command_response(
                 session_id,
                 cleaned_command,
-                _format_slot_listing(self._list_slot_names(session_id)),
+                _format_slot_listing(self._list_slot_names(slot_scope_id)),
                 session["updated_at"],
             )
         if len(tokens) != 2:
             return self._command_response(session_id, cleaned_command, "Usage: save <slot>", session["updated_at"])
 
         slot_name = tokens[1]
-        if self._save_slot_repository.has_slot(session_id, slot_name):
+        if self._save_slot_repository.has_slot(slot_scope_id, slot_name):
             updated_session = self._repository.set_pending_confirmation(session_id, _ACTION_SAVE_OVERWRITE, slot_name)
             return self._command_response(
                 session_id,
@@ -177,23 +189,29 @@ class AdventureService:
 
         adventure = self._load_adventure_from_session(session)
         slot_save_data = base64.b64encode(adventure.admin_save()).decode("ascii")
-        self._save_slot_repository.upsert_slot(session_id, slot_name, slot_save_data)
+        self._save_slot_repository.upsert_slot(slot_scope_id, slot_name, slot_save_data)
         return self._command_response(session_id, cleaned_command, f"{slot_name} saved.", session["updated_at"])
 
-    def _handle_restore_command(self, session: SessionRow, cleaned_command: str, tokens: list[str]) -> dict[str, str]:
+    def _handle_restore_command(
+        self,
+        session: SessionRow,
+        cleaned_command: str,
+        tokens: list[str],
+        slot_scope_id: str,
+    ) -> dict[str, str]:
         session_id = session["session_id"]
         if len(tokens) == 1:
             return self._command_response(
                 session_id,
                 cleaned_command,
-                _format_slot_listing(self._list_slot_names(session_id)),
+                _format_slot_listing(self._list_slot_names(slot_scope_id)),
                 session["updated_at"],
             )
         if len(tokens) != 2:
             return self._command_response(session_id, cleaned_command, "Usage: restore <slot>", session["updated_at"])
 
         slot_name = tokens[1]
-        if not self._save_slot_repository.has_slot(session_id, slot_name):
+        if not self._save_slot_repository.has_slot(slot_scope_id, slot_name):
             return self._command_response(
                 session_id,
                 cleaned_command,
@@ -209,8 +227,21 @@ class AdventureService:
             updated_session["updated_at"],
         )
 
-    def _handle_reset_slots_command(self, session: SessionRow, cleaned_command: str, tokens: list[str]) -> dict[str, str]:
+    def _handle_reset_slots_command(
+        self,
+        session: SessionRow,
+        cleaned_command: str,
+        tokens: list[str],
+        slot_scope_id: str,
+    ) -> dict[str, str]:
         if len(tokens) == 2 and tokens[1].lower() == "slots":
+            if not self._save_slot_repository.list_slots(slot_scope_id):
+                return self._command_response(
+                    session["session_id"],
+                    cleaned_command,
+                    "No saved slots yet.",
+                    session["updated_at"],
+                )
             updated_session = self._repository.set_pending_confirmation(session["session_id"], _ACTION_RESET_SLOTS, None)
             return self._command_response(
                 session["session_id"],
@@ -220,8 +251,8 @@ class AdventureService:
             )
         return self._command_response(session["session_id"], cleaned_command, "Usage: reset slots", session["updated_at"])
 
-    def _list_slot_names(self, session_id: str) -> list[str]:
-        return [row["slot_name"] for row in self._save_slot_repository.list_slots(session_id)]
+    def _list_slot_names(self, slot_scope_id: str) -> list[str]:
+        return [row["slot_name"] for row in self._save_slot_repository.list_slots(slot_scope_id)]
 
     def _load_adventure_from_session(self, session: SessionRow):
         adventure = self._adventure_factory()

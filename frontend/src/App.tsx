@@ -4,13 +4,27 @@ import { createSession, resetSession, runCommand } from "./lib/api";
 import { TranscriptEntry } from "./lib/types";
 import "./App.css";
 
-const SESSION_STORAGE_KEY = "zorkdemo_session_id";
+const PLAYER_STORAGE_KEY = "zorkdemo_player_id";
 
 function generateEntryId(): string {
   return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
 }
 
+function getOrCreatePlayerId(): string {
+  const existing = localStorage.getItem(PLAYER_STORAGE_KEY);
+  if (existing) {
+    return existing;
+  }
+  const generated =
+    typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+      ? crypto.randomUUID()
+      : `player-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  localStorage.setItem(PLAYER_STORAGE_KEY, generated);
+  return generated;
+}
+
 export default function App() {
+  const [playerId, setPlayerId] = useState<string>("");
   const [sessionId, setSessionId] = useState<string>("");
   const [command, setCommand] = useState<string>("");
   const [transcript, setTranscript] = useState<TranscriptEntry[]>([]);
@@ -41,13 +55,13 @@ export default function App() {
       setBusy(true);
       setError("");
       try {
-        const existingSession = localStorage.getItem(SESSION_STORAGE_KEY);
-        const response = await createSession(existingSession);
+        const resolvedPlayerId = getOrCreatePlayerId();
+        setPlayerId(resolvedPlayerId);
+        const response = await createSession(null);
         if (!active) {
           return;
         }
         setSessionId(response.session_id);
-        localStorage.setItem(SESSION_STORAGE_KEY, response.session_id);
         if (response.created && response.intro_html) {
           setTranscript([
             {
@@ -103,7 +117,9 @@ export default function App() {
     setCommand("");
 
     try {
-      const response = await runCommand(sessionId, cleanedCommand);
+      const resolvedPlayerId = playerId || getOrCreatePlayerId();
+      setPlayerId(resolvedPlayerId);
+      const response = await runCommand(sessionId, cleanedCommand, resolvedPlayerId);
       setTranscript((prev) => [
         ...prev,
         {

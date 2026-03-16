@@ -7,7 +7,7 @@ class FakeService:
     def create_session(self, session_id):
         return {"session_id": session_id or "generated-session", "created": True, "intro_html": "<p>Welcome</p>"}
 
-    def execute_command(self, session_id, command):
+    def execute_command(self, session_id, command, player_id=None):
         return {
             "session_id": session_id,
             "input": command,
