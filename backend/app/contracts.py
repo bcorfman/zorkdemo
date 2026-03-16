@@ -6,6 +6,8 @@ from typing import Protocol, TypedDict
 class SessionRow(TypedDict):
     session_id: str
     save_data: str
+    pending_action: str | None
+    pending_slot_name: str | None
     created_at: str
     updated_at: str
 
@@ -16,6 +18,37 @@ class SessionRepository(Protocol):
 
     def set_save_data(self, session_id: str, save_data: str) -> SessionRow:
         """Persist session save payload and return latest row."""
+
+    def set_pending_confirmation(self, session_id: str, action: str, slot_name: str | None) -> SessionRow:
+        """Persist pending confirmation state for a session."""
+
+    def clear_pending_confirmation(self, session_id: str) -> SessionRow:
+        """Clear pending confirmation state for a session."""
+
+
+class SaveSlotRow(TypedDict):
+    session_id: str
+    slot_name: str
+    save_data: str
+    created_at: str
+    updated_at: str
+
+
+class SaveSlotRepository(Protocol):
+    def has_slot(self, session_id: str, slot_name: str) -> bool:
+        """Return whether a slot exists for this session."""
+
+    def upsert_slot(self, session_id: str, slot_name: str, save_data: str) -> SaveSlotRow:
+        """Insert or update slot payload for this session."""
+
+    def get_slot(self, session_id: str, slot_name: str) -> SaveSlotRow | None:
+        """Get slot payload for this session."""
+
+    def list_slots(self, session_id: str) -> list[SaveSlotRow]:
+        """List slots for this session."""
+
+    def delete_all_slots(self, session_id: str) -> int:
+        """Delete all slots for this session and return number deleted."""
 
 
 class AdventureInstance(Protocol):

@@ -19,5 +19,14 @@ def test_alembic_upgrade_creates_sessions_table(tmp_path: Path):
         row = connection.execute(
             text("SELECT name FROM sqlite_master WHERE type='table' AND name='adventure_sessions'")
         ).fetchone()
+        slots_row = connection.execute(
+            text("SELECT name FROM sqlite_master WHERE type='table' AND name='adventure_save_slots'")
+        ).fetchone()
+        session_columns = {
+            column_row[1] for column_row in connection.execute(text("PRAGMA table_info(adventure_sessions)")).fetchall()
+        }
 
     assert row is not None
+    assert slots_row is not None
+    assert "pending_action" in session_columns
+    assert "pending_slot_name" in session_columns

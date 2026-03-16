@@ -188,4 +188,115 @@ describe("App", () => {
     await screen.findByText("West of House");
     expect(screen.getByText("Room text.")).toBeInTheDocument();
   });
+
+  it("follows restore Y/N confirmation flow", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ session_id: "session-123", created: true, intro_html: "<p>Intro</p>" })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "restore SLOT1",
+          output_html: "<p>Do you wish to restore over the game in progress (Y/N)?</p>",
+          updated_at: "2026-03-16T00:00:01"
+        })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "Y",
+          output_html: "<p>SLOT1 restored.</p>",
+          updated_at: "2026-03-16T00:00:02"
+        })
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/Session: session-123/i);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText(/Command/i), "restore SLOT1");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("Do you wish to restore over the game in progress (Y/N)?");
+
+    await user.type(screen.getByLabelText(/Command/i), "Y");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("SLOT1 restored.");
+  });
+
+  it("follows save overwrite Y/N confirmation flow", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ session_id: "session-123", created: true, intro_html: "<p>Intro</p>" })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "save SLOT1",
+          output_html: "<p>SLOT1 already exists. Do you wish to overwrite it (Y/N)?</p>",
+          updated_at: "2026-03-16T00:00:01"
+        })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "N",
+          output_html: "<p>Overwrite cancelled.</p>",
+          updated_at: "2026-03-16T00:00:02"
+        })
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/Session: session-123/i);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText(/Command/i), "save SLOT1");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("SLOT1 already exists. Do you wish to overwrite it (Y/N)?");
+
+    await user.type(screen.getByLabelText(/Command/i), "N");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("Overwrite cancelled.");
+  });
+
+  it("follows reset slots Y/N confirmation flow", async () => {
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce(
+        jsonResponse({ session_id: "session-123", created: true, intro_html: "<p>Intro</p>" })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "reset slots",
+          output_html: "<p>Do you wish to delete all saved slots for this session (Y/N)?</p>",
+          updated_at: "2026-03-16T00:00:01"
+        })
+      )
+      .mockResolvedValueOnce(
+        jsonResponse({
+          session_id: "session-123",
+          input: "Y",
+          output_html: "<p>All saved slots deleted for this session.</p>",
+          updated_at: "2026-03-16T00:00:02"
+        })
+      );
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(<App />);
+    await screen.findByText(/Session: session-123/i);
+
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText(/Command/i), "reset slots");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("Do you wish to delete all saved slots for this session (Y/N)?");
+
+    await user.type(screen.getByLabelText(/Command/i), "Y");
+    await user.click(screen.getByRole("button", { name: /Send/i }));
+    await screen.findByText("All saved slots deleted for this session.");
+  });
 });

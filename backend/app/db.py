@@ -15,6 +15,26 @@ class AdventureSession(Base):
 
     session_id: Mapped[str] = mapped_column(String(255), primary_key=True)
     save_data: Mapped[str] = mapped_column(String, default="", nullable=False)
+    pending_action: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    pending_slot_name: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow,
+        nullable=False,
+    )
+
+
+class AdventureSaveSlot(Base):
+    __tablename__ = "adventure_save_slots"
+
+    session_id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    slot_name: Mapped[str] = mapped_column(String(255), primary_key=True)
+    save_data: Mapped[str] = mapped_column(String, default="", nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.utcnow,
