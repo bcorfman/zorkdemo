@@ -23,8 +23,7 @@ def test_alembic_upgrade_creates_sessions_table(tmp_path: Path):
             text("SELECT name FROM sqlite_master WHERE type='table' AND name='adventure_save_slots'")
         ).fetchone()
         session_columns = {
-            column_row[1]
-            for column_row in connection.execute(text("PRAGMA table_info(adventure_sessions)")).fetchall()
+            column_row[1] for column_row in connection.execute(text("PRAGMA table_info(adventure_sessions)")).fetchall()
         }
 
     assert row is not None
