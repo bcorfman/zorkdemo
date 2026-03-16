@@ -263,7 +263,9 @@ def test_bare_save_and_restore_list_slots():
     service.create_session(session_id)
 
     empty_list = service.execute_command(session_id, "save")
-    assert empty_list["output_html"] == "No saved slots yet."
+    assert empty_list["output_html"] == (
+        "No saved slots yet.\nYou can save a game by typing 'save [slot_name]' at the prompt."
+    )
 
     service.execute_command(session_id, "save SLOT2")
     service.execute_command(session_id, "save SLOT1")
