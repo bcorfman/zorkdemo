@@ -173,10 +173,7 @@ class AdventureService:
                 return self._command_response(
                     session_id,
                     cleaned_command,
-                    (
-                        "No saved slots yet.\n"
-                        "You can save a game by typing 'save [slot_name]' at the prompt."
-                    ),
+                    ("No saved slots yet.\nYou can save a game by typing 'save [slot_name]' at the prompt."),
                     session["updated_at"],
                 )
             return self._command_response(
