@@ -28,6 +28,7 @@ uv run alembic -c backend/alembic.ini upgrade head
 
 - Railway config file: `railway.toml`
 - Health check path: `/api/v1/health`
+- Startup runs Alembic with retry to tolerate brief Postgres recovery windows before app boot.
 - Required env vars:
   - `DATABASE_URL`
   - `CORS_ALLOW_ORIGINS` (include `https://bcorfman.github.io` for production frontend)
