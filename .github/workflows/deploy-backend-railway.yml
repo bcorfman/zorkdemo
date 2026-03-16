@@ -47,7 +47,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
           RAILWAY_SERVICE: ${{ vars.RAILWAY_SERVICE }}
-        run: railway up --service "$RAILWAY_SERVICE"
+        run: railway up --service "$RAILWAY_SERVICE" 
 
       - name: Health check
         if: ${{ vars.BACKEND_HEALTHCHECK_URL != '' }}
