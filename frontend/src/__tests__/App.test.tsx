@@ -23,7 +23,7 @@ describe("App", () => {
     vi.restoreAllMocks();
   });
 
-  it("bootstraps a session and stores the session id", async () => {
+  it("bootstraps a new session", async () => {
     const fetchMock = vi.fn().mockResolvedValue(
       jsonResponse({ session_id: "session-123", created: true })
     );
@@ -32,14 +32,17 @@ describe("App", () => {
     render(<App />);
 
     await screen.findByText(/Session: session-123/i);
-    expect(window.localStorage.getItem("zorkdemo_session_id")).toBe("session-123");
     expect(fetchMock).toHaveBeenCalledWith(
       "http://localhost:8000/api/v1/session",
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({})
+      })
     );
   });
 
   it("submits a command and renders html output", async () => {
+    window.localStorage.setItem("zorkdemo_player_id", "player-123");
     const fetchMock = vi
       .fn()
       .mockResolvedValueOnce(
@@ -67,7 +70,14 @@ describe("App", () => {
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,
       "http://localhost:8000/api/v1/command",
-      expect.objectContaining({ method: "POST" })
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          session_id: "session-123",
+          command: "look",
+          player_id: "player-123"
+        })
+      })
     );
   });
 
@@ -104,23 +114,21 @@ describe("App", () => {
     });
   });
 
-  it("uses existing local session id and marks session as resumed", async () => {
-    window.localStorage.setItem("zorkdemo_session_id", "existing-session");
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValue(
-        jsonResponse({ session_id: "existing-session", created: false })
-      );
+  it("always creates a new session even when localStorage has an old id", async () => {
+    window.localStorage.setItem("zorkdemo_session_id", "stale-session");
+    const fetchMock = vi.fn().mockResolvedValue(
+      jsonResponse({ session_id: "new-session", created: true })
+    );
     vi.stubGlobal("fetch", fetchMock);
 
     render(<App />);
 
-    await screen.findByText(/Session: existing-session \(resumed\)/i);
+    await screen.findByText(/Session: new-session \(new\)/i);
     expect(fetchMock).toHaveBeenCalledWith(
       "http://localhost:8000/api/v1/session",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ session_id: "existing-session" })
+        body: JSON.stringify({})
       })
     );
   });

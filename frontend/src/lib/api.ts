@@ -54,11 +54,12 @@ export async function createSession(
 
 export async function runCommand(
   sessionId: string,
-  command: string
+  command: string,
+  playerId: string
 ): Promise<CommandResponse> {
   return requestJson(
     "/api/v1/command",
-    { session_id: sessionId, command },
+    { session_id: sessionId, command, player_id: playerId },
     CommandResponseSchema
   );
 }

@@ -300,3 +300,30 @@ def test_reset_slots_requires_confirmation_and_is_scoped_to_session():
     assert confirmed["output_html"] == "All saved slots deleted for this session."
     assert slots.list_slots("session-a") == []
     assert slots.has_slot("session-b", "B1") is True
+
+
+def test_slots_can_be_restored_across_new_sessions_for_same_player():
+    repository = InMemorySessionRepository()
+    slots = InMemorySaveSlotRepository()
+    service = AdventureService(
+        repository=repository,
+        save_slot_repository=slots,
+        adventure_factory=FakeAdventure,
+        markdown_renderer=lambda text: text,
+    )
+    player_id = "player-abc"
+    first_session = "session-1"
+    second_session = "session-2"
+
+    service.create_session(first_session)
+    saved = service.execute_command(first_session, "save SLOT1", player_id=player_id)
+    assert saved["output_html"] == "SLOT1 saved."
+
+    service.create_session(second_session)
+    list_from_new_session = service.execute_command(second_session, "restore", player_id=player_id)
+    assert "SLOT1" in list_from_new_session["output_html"]
+
+    prompt = service.execute_command(second_session, "restore SLOT1", player_id=player_id)
+    assert prompt["output_html"] == "Do you wish to restore over the game in progress (Y/N)?"
+    restored = service.execute_command(second_session, "Y", player_id=player_id)
+    assert restored["output_html"] == "SLOT1 restored."

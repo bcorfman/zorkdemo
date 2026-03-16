@@ -44,6 +44,7 @@ uv run alembic -c backend/alembic.ini upgrade head
 ## Command Notes
 
 - `save` / `restore` (no slot): list saved slots for current session.
+- Save slots are scoped by persistent frontend player identity, so players can access their saved slots across new sessions.
 - `save <slot>`:
   - Creates slot if it does not exist.
   - If slot exists, backend asks for confirmation with `Y/N`.

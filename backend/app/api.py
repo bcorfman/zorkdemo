@@ -23,6 +23,7 @@ class SessionCreateResponse(BaseModel):
 class CommandRequest(BaseModel):
     session_id: str
     command: str
+    player_id: str | None = None
 
 
 class CommandResponse(BaseModel):
@@ -59,6 +60,7 @@ def create_api_router(service: AdventureService) -> APIRouter:
             return service.execute_command(
                 session_id=payload.session_id,
                 command=payload.command,
+                player_id=payload.player_id,
             )
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
