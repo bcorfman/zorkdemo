@@ -81,7 +81,9 @@ def create_app(
 
 
 try:
-    app = create_app()
+    # Railway startup already runs Alembic before boot, so avoid a second
+    # schema initialization connection during app import/startup.
+    app = create_app(init_database_on_startup=False)
 except FileNotFoundError:
     # Story file not available (e.g. during test collection).
     # Tests inject their own service via create_app(), so build a
