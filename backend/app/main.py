@@ -9,7 +9,7 @@ from yazm.web_adapter import ZorkWebAdapter
 
 from .api import create_api_router
 from .db import create_session_factory, initialize_database
-from .repository import PostgresSessionRepository
+from .repository import PostgresSaveSlotRepository, PostgresSessionRepository
 from .rendering import markdown_to_html
 from .service import AdventureService
 from .settings import Settings, settings as default_settings
@@ -59,8 +59,10 @@ def create_app(
         story_data = _load_story_data(app_settings)
         session_factory = create_session_factory(app_settings.database_url)
         repository = PostgresSessionRepository(session_factory)
+        save_slot_repository = PostgresSaveSlotRepository(session_factory)
         service = AdventureService(
             repository=repository,
+            save_slot_repository=save_slot_repository,
             adventure_factory=_make_adventure_factory(story_data),
             markdown_renderer=markdown_to_html,
         )

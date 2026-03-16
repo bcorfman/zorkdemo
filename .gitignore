@@ -4,6 +4,7 @@ __pycache__/
 .venv/
 build/
 dist/
+.tmp/
 zorkdemo.egg-info/
 .vscode
 *.db

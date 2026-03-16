@@ -39,6 +39,7 @@
 ## Persistence Notes (Phase 2)
 
 - Primary table: `adventure_sessions`
+- Save slots table: `adventure_save_slots`
 - Repository adapter: `PostgresSessionRepository`
 - Migration command: `uv run alembic -c backend/alembic.ini upgrade head`
 

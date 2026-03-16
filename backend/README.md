@@ -40,3 +40,16 @@ uv run alembic -c backend/alembic.ini upgrade head
 - `POST /api/v1/session` (returns `intro_html` for new sessions; duplicate trailing intro blocks are normalized)
 - `POST /api/v1/command`
 - `POST /api/v1/session/reset` (resets to initial game state and returns fresh `intro_html`)
+
+## Command Notes
+
+- `save` / `restore` (no slot): list saved slots for current session.
+- `save <slot>`:
+  - Creates slot if it does not exist.
+  - If slot exists, backend asks for confirmation with `Y/N`.
+- `restore <slot>`:
+  - Asks for `Y/N` confirmation before restoring over current progress.
+- `reset slots`:
+  - Asks for `Y/N` confirmation and deletes only current session's saved slots.
+- While a confirmation is pending, commands other than `Y`/`N` return:
+  - `Please answer Y or N.`
