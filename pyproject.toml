@@ -8,7 +8,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.15.0,<2",
-    "environs>=9.5.0,<15",
+    "environs>=9.5.0,<16",
     "fastapi>=0.115.0,<1",
     "Markdown>=3.4.1,<4",
     "psycopg[binary]>=3.2.0,<4",
