@@ -9,7 +9,7 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.15.0,<2",
     "environs>=15.0.1,<16",
-    "fastapi>=0.115.0,<1",
+    "fastapi>=0.136.0,<1",
     "Markdown>=3.4.1,<4",
     "psycopg[binary]>=3.3.3,<4",
     "rich>=13.0.0,<15",
