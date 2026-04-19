@@ -14,7 +14,7 @@ dependencies = [
     "psycopg[binary]>=3.3.3,<4",
     "rich>=15.0.0,<16",
     "SQLAlchemy>=2.0.35,<3",
-    "uvicorn>=0.32.0,<1",
+    "uvicorn>=0.44.0,<1",
     "yazm-py>=0.1.0,<1",
 ]
 
