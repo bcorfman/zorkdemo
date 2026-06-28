@@ -20,7 +20,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-    "coverage>=7.14.2,<8",
+    "coverage>=7.14.3,<8",
     "httpx>=0.28.0,<1",
     "ipython>=9.14.1,<10",
     "pyinstaller>=6.21.0,<7",
